@@ -1,0 +1,1 @@
+curl https://get.ignite.com/cli | bash
