@@ -1,0 +1,159 @@
+syntax = "proto3";
+
+package resist.posts.v1;
+
+import "amino/amino.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "resist/posts/v1/params.proto";
+import "resist/posts/v1/post_tag.proto";
+import "resist/posts/v1/social_post.proto";
+import "resist/posts/v1/source.proto";
+import "resist/posts/v1/vote.proto";
+
+option go_package = "resist/x/posts/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/resist/posts/v1/params";
+  }
+
+  // ListSocialPost Queries a list of SocialPost items.
+  rpc GetSocialPost(QueryGetSocialPostRequest) returns (QueryGetSocialPostResponse) {
+    option (google.api.http).get = "/resist/posts/v1/social_post/{index}";
+  }
+
+  // ListSocialPost defines the ListSocialPost RPC.
+  rpc ListSocialPost(QueryAllSocialPostRequest) returns (QueryAllSocialPostResponse) {
+    option (google.api.http).get = "/resist/posts/v1/social_post";
+  }
+
+  // ListVote Queries a list of Vote items.
+  rpc GetVote(QueryGetVoteRequest) returns (QueryGetVoteResponse) {
+    option (google.api.http).get = "/resist/posts/v1/vote/{index}";
+  }
+
+  // ListVote defines the ListVote RPC.
+  rpc ListVote(QueryAllVoteRequest) returns (QueryAllVoteResponse) {
+    option (google.api.http).get = "/resist/posts/v1/vote";
+  }
+
+  // ListSource Queries a list of Source items.
+  rpc GetSource(QueryGetSourceRequest) returns (QueryGetSourceResponse) {
+    option (google.api.http).get = "/resist/posts/v1/source/{index}";
+  }
+
+  // ListSource defines the ListSource RPC.
+  rpc ListSource(QueryAllSourceRequest) returns (QueryAllSourceResponse) {
+    option (google.api.http).get = "/resist/posts/v1/source";
+  }
+
+  // ListPostTag Queries a list of PostTag items.
+  rpc GetPostTag(QueryGetPostTagRequest) returns (QueryGetPostTagResponse) {
+    option (google.api.http).get = "/resist/posts/v1/post_tag/{index}";
+  }
+
+  // ListPostTag defines the ListPostTag RPC.
+  rpc ListPostTag(QueryAllPostTagRequest) returns (QueryAllPostTagResponse) {
+    option (google.api.http).get = "/resist/posts/v1/post_tag";
+  }
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// QueryGetSocialPostRequest defines the QueryGetSocialPostRequest message.
+message QueryGetSocialPostRequest {
+  string index = 1;
+}
+
+// QueryGetSocialPostResponse defines the QueryGetSocialPostResponse message.
+message QueryGetSocialPostResponse {
+  SocialPost social_post = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryAllSocialPostRequest defines the QueryAllSocialPostRequest message.
+message QueryAllSocialPostRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllSocialPostResponse defines the QueryAllSocialPostResponse message.
+message QueryAllSocialPostResponse {
+  repeated SocialPost social_post = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryGetVoteRequest defines the QueryGetVoteRequest message.
+message QueryGetVoteRequest {
+  string index = 1;
+}
+
+// QueryGetVoteResponse defines the QueryGetVoteResponse message.
+message QueryGetVoteResponse {
+  Vote vote = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryAllVoteRequest defines the QueryAllVoteRequest message.
+message QueryAllVoteRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllVoteResponse defines the QueryAllVoteResponse message.
+message QueryAllVoteResponse {
+  repeated Vote vote = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryGetSourceRequest defines the QueryGetSourceRequest message.
+message QueryGetSourceRequest {
+  string index = 1;
+}
+
+// QueryGetSourceResponse defines the QueryGetSourceResponse message.
+message QueryGetSourceResponse {
+  Source source = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryAllSourceRequest defines the QueryAllSourceRequest message.
+message QueryAllSourceRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllSourceResponse defines the QueryAllSourceResponse message.
+message QueryAllSourceResponse {
+  repeated Source source = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryGetPostTagRequest defines the QueryGetPostTagRequest message.
+message QueryGetPostTagRequest {
+  string index = 1;
+}
+
+// QueryGetPostTagResponse defines the QueryGetPostTagResponse message.
+message QueryGetPostTagResponse {
+  PostTag post_tag = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryAllPostTagRequest defines the QueryAllPostTagRequest message.
+message QueryAllPostTagRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllPostTagResponse defines the QueryAllPostTagResponse message.
+message QueryAllPostTagResponse {
+  repeated PostTag post_tag = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

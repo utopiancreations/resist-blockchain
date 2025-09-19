@@ -1,0 +1,17 @@
+syntax = "proto3";
+package resist.usergroups.v1;
+
+option go_package = "resist/x/usergroups/types";
+
+// ContentReport defines the ContentReport message.
+message ContentReport {
+  string index = 1;
+  uint64 post_id = 2;
+  string reporter = 3;
+  string reason = 4;
+  string evidence = 5;
+  string status = 6;
+  string community_response = 7;
+  string resolution = 8;
+  string creator = 9;
+}

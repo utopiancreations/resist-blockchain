@@ -1,0 +1,204 @@
+syntax = "proto3";
+
+package resist.usergroups.v1;
+
+import "amino/amino.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "resist/usergroups/v1/params.proto";
+
+option go_package = "resist/x/usergroups/types";
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+
+  // UpdateParams defines a (governance) operation for updating the module
+  // parameters. The authority defaults to the x/gov module account.
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+
+  // CreateUserGroup defines the CreateUserGroup RPC.
+  rpc CreateUserGroup(MsgCreateUserGroup) returns (MsgCreateUserGroupResponse);
+
+  // UpdateUserGroup defines the UpdateUserGroup RPC.
+  rpc UpdateUserGroup(MsgUpdateUserGroup) returns (MsgUpdateUserGroupResponse);
+
+  // DeleteUserGroup defines the DeleteUserGroup RPC.
+  rpc DeleteUserGroup(MsgDeleteUserGroup) returns (MsgDeleteUserGroupResponse);
+
+  // CreateContentReport defines the CreateContentReport RPC.
+  rpc CreateContentReport(MsgCreateContentReport) returns (MsgCreateContentReportResponse);
+
+  // UpdateContentReport defines the UpdateContentReport RPC.
+  rpc UpdateContentReport(MsgUpdateContentReport) returns (MsgUpdateContentReportResponse);
+
+  // DeleteContentReport defines the DeleteContentReport RPC.
+  rpc DeleteContentReport(MsgDeleteContentReport) returns (MsgDeleteContentReportResponse);
+
+  // CreateGovernanceProposal defines the CreateGovernanceProposal RPC.
+  rpc CreateGovernanceProposal(MsgCreateGovernanceProposal) returns (MsgCreateGovernanceProposalResponse);
+
+  // UpdateGovernanceProposal defines the UpdateGovernanceProposal RPC.
+  rpc UpdateGovernanceProposal(MsgUpdateGovernanceProposal) returns (MsgUpdateGovernanceProposalResponse);
+
+  // DeleteGovernanceProposal defines the DeleteGovernanceProposal RPC.
+  rpc DeleteGovernanceProposal(MsgDeleteGovernanceProposal) returns (MsgDeleteGovernanceProposalResponse);
+}
+
+// MsgUpdateParams is the Msg/UpdateParams request type.
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "resist/x/usergroups/MsgUpdateParams";
+
+  // authority is the address that controls the module (defaults to x/gov unless overwritten).
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // params defines the module parameters to update.
+
+  // NOTE: All parameters must be supplied.
+  Params params = 2 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+message MsgUpdateParamsResponse {}
+
+// MsgCreateUserGroup defines the MsgCreateUserGroup message.
+message MsgCreateUserGroup {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+  string name = 3;
+  string description = 4;
+  string admin = 5;
+  repeated string members = 6;
+  uint64 vote_threshold = 7;
+  uint64 created_at = 8;
+}
+
+// MsgCreateUserGroupResponse defines the MsgCreateUserGroupResponse message.
+message MsgCreateUserGroupResponse {}
+
+// MsgUpdateUserGroup defines the MsgUpdateUserGroup message.
+message MsgUpdateUserGroup {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+  string name = 3;
+  string description = 4;
+  string admin = 5;
+  repeated string members = 6;
+  uint64 vote_threshold = 7;
+  uint64 created_at = 8;
+}
+
+// MsgUpdateUserGroupResponse defines the MsgUpdateUserGroupResponse message.
+message MsgUpdateUserGroupResponse {}
+
+// MsgDeleteUserGroup defines the MsgDeleteUserGroup message.
+message MsgDeleteUserGroup {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+}
+
+// MsgDeleteUserGroupResponse defines the MsgDeleteUserGroupResponse message.
+message MsgDeleteUserGroupResponse {}
+
+// MsgCreateContentReport defines the MsgCreateContentReport message.
+message MsgCreateContentReport {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+  uint64 post_id = 3;
+  string reporter = 4;
+  string reason = 5;
+  string evidence = 6;
+  string status = 7;
+  string community_response = 8;
+  string resolution = 9;
+}
+
+// MsgCreateContentReportResponse defines the MsgCreateContentReportResponse message.
+message MsgCreateContentReportResponse {}
+
+// MsgUpdateContentReport defines the MsgUpdateContentReport message.
+message MsgUpdateContentReport {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+  uint64 post_id = 3;
+  string reporter = 4;
+  string reason = 5;
+  string evidence = 6;
+  string status = 7;
+  string community_response = 8;
+  string resolution = 9;
+}
+
+// MsgUpdateContentReportResponse defines the MsgUpdateContentReportResponse message.
+message MsgUpdateContentReportResponse {}
+
+// MsgDeleteContentReport defines the MsgDeleteContentReport message.
+message MsgDeleteContentReport {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+}
+
+// MsgDeleteContentReportResponse defines the MsgDeleteContentReportResponse message.
+message MsgDeleteContentReportResponse {}
+
+// MsgCreateGovernanceProposal defines the MsgCreateGovernanceProposal message.
+message MsgCreateGovernanceProposal {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+  string title = 3;
+  string description = 4;
+  string proposer = 5;
+  string proposal_type = 6;
+  int64 voting_period_start = 7;
+  int64 voting_period_end = 8;
+  uint64 yes_votes = 9;
+  uint64 no_votes = 10;
+  uint64 abstain_votes = 11;
+  string status = 12;
+}
+
+// MsgCreateGovernanceProposalResponse defines the MsgCreateGovernanceProposalResponse message.
+message MsgCreateGovernanceProposalResponse {}
+
+// MsgUpdateGovernanceProposal defines the MsgUpdateGovernanceProposal message.
+message MsgUpdateGovernanceProposal {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+  string title = 3;
+  string description = 4;
+  string proposer = 5;
+  string proposal_type = 6;
+  int64 voting_period_start = 7;
+  int64 voting_period_end = 8;
+  uint64 yes_votes = 9;
+  uint64 no_votes = 10;
+  uint64 abstain_votes = 11;
+  string status = 12;
+}
+
+// MsgUpdateGovernanceProposalResponse defines the MsgUpdateGovernanceProposalResponse message.
+message MsgUpdateGovernanceProposalResponse {}
+
+// MsgDeleteGovernanceProposal defines the MsgDeleteGovernanceProposal message.
+message MsgDeleteGovernanceProposal {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+}
+
+// MsgDeleteGovernanceProposalResponse defines the MsgDeleteGovernanceProposalResponse message.
+message MsgDeleteGovernanceProposalResponse {}

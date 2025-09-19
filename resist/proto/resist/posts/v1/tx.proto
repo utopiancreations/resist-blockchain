@@ -1,0 +1,276 @@
+syntax = "proto3";
+
+package resist.posts.v1;
+
+import "amino/amino.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "resist/posts/v1/params.proto";
+
+option go_package = "resist/x/posts/types";
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+
+  // UpdateParams defines a (governance) operation for updating the module
+  // parameters. The authority defaults to the x/gov module account.
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+
+  // CreatePost defines the CreatePost RPC.
+  rpc CreatePost(MsgCreatePost) returns (MsgCreatePostResponse);
+
+  // VotePost defines the VotePost RPC.
+  rpc VotePost(MsgVotePost) returns (MsgVotePostResponse);
+
+  // CreateSocialPost defines the CreateSocialPost RPC.
+  rpc CreateSocialPost(MsgCreateSocialPost) returns (MsgCreateSocialPostResponse);
+
+  // UpdateSocialPost defines the UpdateSocialPost RPC.
+  rpc UpdateSocialPost(MsgUpdateSocialPost) returns (MsgUpdateSocialPostResponse);
+
+  // DeleteSocialPost defines the DeleteSocialPost RPC.
+  rpc DeleteSocialPost(MsgDeleteSocialPost) returns (MsgDeleteSocialPostResponse);
+
+  // CreateVote defines the CreateVote RPC.
+  rpc CreateVote(MsgCreateVote) returns (MsgCreateVoteResponse);
+
+  // UpdateVote defines the UpdateVote RPC.
+  rpc UpdateVote(MsgUpdateVote) returns (MsgUpdateVoteResponse);
+
+  // DeleteVote defines the DeleteVote RPC.
+  rpc DeleteVote(MsgDeleteVote) returns (MsgDeleteVoteResponse);
+
+  // CreateSource defines the CreateSource RPC.
+  rpc CreateSource(MsgCreateSource) returns (MsgCreateSourceResponse);
+
+  // UpdateSource defines the UpdateSource RPC.
+  rpc UpdateSource(MsgUpdateSource) returns (MsgUpdateSourceResponse);
+
+  // DeleteSource defines the DeleteSource RPC.
+  rpc DeleteSource(MsgDeleteSource) returns (MsgDeleteSourceResponse);
+
+  // CreatePostTag defines the CreatePostTag RPC.
+  rpc CreatePostTag(MsgCreatePostTag) returns (MsgCreatePostTagResponse);
+
+  // UpdatePostTag defines the UpdatePostTag RPC.
+  rpc UpdatePostTag(MsgUpdatePostTag) returns (MsgUpdatePostTagResponse);
+
+  // DeletePostTag defines the DeletePostTag RPC.
+  rpc DeletePostTag(MsgDeletePostTag) returns (MsgDeletePostTagResponse);
+}
+
+// MsgUpdateParams is the Msg/UpdateParams request type.
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "resist/x/posts/MsgUpdateParams";
+
+  // authority is the address that controls the module (defaults to x/gov unless overwritten).
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // params defines the module parameters to update.
+
+  // NOTE: All parameters must be supplied.
+  Params params = 2 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+message MsgUpdateParamsResponse {}
+
+// MsgCreatePost defines the MsgCreatePost message.
+message MsgCreatePost {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string title = 2;
+  string content = 3;
+  string media_url = 4;
+  string media_type = 5;
+  uint64 group_id = 6;
+}
+
+// MsgCreatePostResponse defines the MsgCreatePostResponse message.
+message MsgCreatePostResponse {}
+
+// MsgVotePost defines the MsgVotePost message.
+message MsgVotePost {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  uint64 post_id = 2;
+  string vote_type = 3;
+}
+
+// MsgVotePostResponse defines the MsgVotePostResponse message.
+message MsgVotePostResponse {}
+
+// MsgCreateSocialPost defines the MsgCreateSocialPost message.
+message MsgCreateSocialPost {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+  string title = 3;
+  string content = 4;
+  string media_url = 5;
+  string media_type = 6;
+  uint64 group_id = 7;
+  string author = 8;
+  uint64 upvotes = 9;
+  uint64 downvotes = 10;
+  uint64 created_at = 11;
+}
+
+// MsgCreateSocialPostResponse defines the MsgCreateSocialPostResponse message.
+message MsgCreateSocialPostResponse {}
+
+// MsgUpdateSocialPost defines the MsgUpdateSocialPost message.
+message MsgUpdateSocialPost {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+  string title = 3;
+  string content = 4;
+  string media_url = 5;
+  string media_type = 6;
+  uint64 group_id = 7;
+  string author = 8;
+  uint64 upvotes = 9;
+  uint64 downvotes = 10;
+  uint64 created_at = 11;
+}
+
+// MsgUpdateSocialPostResponse defines the MsgUpdateSocialPostResponse message.
+message MsgUpdateSocialPostResponse {}
+
+// MsgDeleteSocialPost defines the MsgDeleteSocialPost message.
+message MsgDeleteSocialPost {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+}
+
+// MsgDeleteSocialPostResponse defines the MsgDeleteSocialPostResponse message.
+message MsgDeleteSocialPostResponse {}
+
+// MsgCreateVote defines the MsgCreateVote message.
+message MsgCreateVote {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+  string voter_address = 3;
+  uint64 post_id = 4;
+  string vote_type = 5;
+  int64 timestamp = 6;
+}
+
+// MsgCreateVoteResponse defines the MsgCreateVoteResponse message.
+message MsgCreateVoteResponse {}
+
+// MsgUpdateVote defines the MsgUpdateVote message.
+message MsgUpdateVote {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+  string voter_address = 3;
+  uint64 post_id = 4;
+  string vote_type = 5;
+  int64 timestamp = 6;
+}
+
+// MsgUpdateVoteResponse defines the MsgUpdateVoteResponse message.
+message MsgUpdateVoteResponse {}
+
+// MsgDeleteVote defines the MsgDeleteVote message.
+message MsgDeleteVote {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+}
+
+// MsgDeleteVoteResponse defines the MsgDeleteVoteResponse message.
+message MsgDeleteVoteResponse {}
+
+// MsgCreateSource defines the MsgCreateSource message.
+message MsgCreateSource {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+  string url = 3;
+  string title = 4;
+  string description = 5;
+  int64 credibility_score = 6;
+  string analysis_summary = 7;
+  bool verified = 8;
+}
+
+// MsgCreateSourceResponse defines the MsgCreateSourceResponse message.
+message MsgCreateSourceResponse {}
+
+// MsgUpdateSource defines the MsgUpdateSource message.
+message MsgUpdateSource {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+  string url = 3;
+  string title = 4;
+  string description = 5;
+  int64 credibility_score = 6;
+  string analysis_summary = 7;
+  bool verified = 8;
+}
+
+// MsgUpdateSourceResponse defines the MsgUpdateSourceResponse message.
+message MsgUpdateSourceResponse {}
+
+// MsgDeleteSource defines the MsgDeleteSource message.
+message MsgDeleteSource {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+}
+
+// MsgDeleteSourceResponse defines the MsgDeleteSourceResponse message.
+message MsgDeleteSourceResponse {}
+
+// MsgCreatePostTag defines the MsgCreatePostTag message.
+message MsgCreatePostTag {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+  uint64 post_id = 3;
+  string tag = 4;
+  string category = 5;
+  int64 similarity_score = 6;
+  string related_posts = 7;
+}
+
+// MsgCreatePostTagResponse defines the MsgCreatePostTagResponse message.
+message MsgCreatePostTagResponse {}
+
+// MsgUpdatePostTag defines the MsgUpdatePostTag message.
+message MsgUpdatePostTag {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+  uint64 post_id = 3;
+  string tag = 4;
+  string category = 5;
+  int64 similarity_score = 6;
+  string related_posts = 7;
+}
+
+// MsgUpdatePostTagResponse defines the MsgUpdatePostTagResponse message.
+message MsgUpdatePostTagResponse {}
+
+// MsgDeletePostTag defines the MsgDeletePostTag message.
+message MsgDeletePostTag {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+}
+
+// MsgDeletePostTagResponse defines the MsgDeletePostTagResponse message.
+message MsgDeletePostTagResponse {}

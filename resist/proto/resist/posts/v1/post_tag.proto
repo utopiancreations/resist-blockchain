@@ -1,0 +1,15 @@
+syntax = "proto3";
+package resist.posts.v1;
+
+option go_package = "resist/x/posts/types";
+
+// PostTag defines the PostTag message.
+message PostTag {
+  string index = 1;
+  uint64 post_id = 2;
+  string tag = 3;
+  string category = 4;
+  int64 similarity_score = 5;
+  string related_posts = 6;
+  string creator = 7;
+}

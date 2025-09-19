@@ -1,0 +1,13 @@
+syntax = "proto3";
+package resist.posts.v1;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "resist/x/posts/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (amino.name) = "resist/x/posts/Params";
+  option (gogoproto.equal) = true;
+}

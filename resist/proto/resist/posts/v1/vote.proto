@@ -1,0 +1,14 @@
+syntax = "proto3";
+package resist.posts.v1;
+
+option go_package = "resist/x/posts/types";
+
+// Vote defines the Vote message.
+message Vote {
+  string index = 1;
+  string voter_address = 2;
+  uint64 post_id = 3;
+  string vote_type = 4;
+  int64 timestamp = 5;
+  string creator = 6;
+}

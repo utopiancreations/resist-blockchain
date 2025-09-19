@@ -1,0 +1,16 @@
+syntax = "proto3";
+package resist.usergroups.v1;
+
+option go_package = "resist/x/usergroups/types";
+
+// UserGroup defines the UserGroup message.
+message UserGroup {
+  string index = 1;
+  string name = 2;
+  string description = 3;
+  string admin = 4;
+  repeated string members = 5;
+  uint64 vote_threshold = 6;
+  uint64 created_at = 7;
+  string creator = 8;
+}

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package resist.usergroups.v1;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "resist/usergroups/v1/content_report.proto";
+import "resist/usergroups/v1/governance_proposal.proto";
+import "resist/usergroups/v1/params.proto";
+import "resist/usergroups/v1/user_group.proto";
+
+option go_package = "resist/x/usergroups/types";
+
+// GenesisState defines the usergroups module's genesis state.
+message GenesisState {
+  // params defines all the parameters of the module.
+  Params params = 1 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  repeated UserGroup user_group_map = 2 [(gogoproto.nullable) = false];
+  repeated ContentReport content_report_map = 3 [(gogoproto.nullable) = false];
+  repeated GovernanceProposal governance_proposal_map = 4 [(gogoproto.nullable) = false];
+}

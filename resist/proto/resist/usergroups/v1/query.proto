@@ -1,0 +1,127 @@
+syntax = "proto3";
+
+package resist.usergroups.v1;
+
+import "amino/amino.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "resist/usergroups/v1/content_report.proto";
+import "resist/usergroups/v1/governance_proposal.proto";
+import "resist/usergroups/v1/params.proto";
+import "resist/usergroups/v1/user_group.proto";
+
+option go_package = "resist/x/usergroups/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/resist/usergroups/v1/params";
+  }
+
+  // ListUserGroup Queries a list of UserGroup items.
+  rpc GetUserGroup(QueryGetUserGroupRequest) returns (QueryGetUserGroupResponse) {
+    option (google.api.http).get = "/resist/usergroups/v1/user_group/{index}";
+  }
+
+  // ListUserGroup defines the ListUserGroup RPC.
+  rpc ListUserGroup(QueryAllUserGroupRequest) returns (QueryAllUserGroupResponse) {
+    option (google.api.http).get = "/resist/usergroups/v1/user_group";
+  }
+
+  // ListContentReport Queries a list of ContentReport items.
+  rpc GetContentReport(QueryGetContentReportRequest) returns (QueryGetContentReportResponse) {
+    option (google.api.http).get = "/resist/usergroups/v1/content_report/{index}";
+  }
+
+  // ListContentReport defines the ListContentReport RPC.
+  rpc ListContentReport(QueryAllContentReportRequest) returns (QueryAllContentReportResponse) {
+    option (google.api.http).get = "/resist/usergroups/v1/content_report";
+  }
+
+  // ListGovernanceProposal Queries a list of GovernanceProposal items.
+  rpc GetGovernanceProposal(QueryGetGovernanceProposalRequest) returns (QueryGetGovernanceProposalResponse) {
+    option (google.api.http).get = "/resist/usergroups/v1/governance_proposal/{index}";
+  }
+
+  // ListGovernanceProposal defines the ListGovernanceProposal RPC.
+  rpc ListGovernanceProposal(QueryAllGovernanceProposalRequest) returns (QueryAllGovernanceProposalResponse) {
+    option (google.api.http).get = "/resist/usergroups/v1/governance_proposal";
+  }
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// QueryGetUserGroupRequest defines the QueryGetUserGroupRequest message.
+message QueryGetUserGroupRequest {
+  string index = 1;
+}
+
+// QueryGetUserGroupResponse defines the QueryGetUserGroupResponse message.
+message QueryGetUserGroupResponse {
+  UserGroup user_group = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryAllUserGroupRequest defines the QueryAllUserGroupRequest message.
+message QueryAllUserGroupRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllUserGroupResponse defines the QueryAllUserGroupResponse message.
+message QueryAllUserGroupResponse {
+  repeated UserGroup user_group = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryGetContentReportRequest defines the QueryGetContentReportRequest message.
+message QueryGetContentReportRequest {
+  string index = 1;
+}
+
+// QueryGetContentReportResponse defines the QueryGetContentReportResponse message.
+message QueryGetContentReportResponse {
+  ContentReport content_report = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryAllContentReportRequest defines the QueryAllContentReportRequest message.
+message QueryAllContentReportRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllContentReportResponse defines the QueryAllContentReportResponse message.
+message QueryAllContentReportResponse {
+  repeated ContentReport content_report = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryGetGovernanceProposalRequest defines the QueryGetGovernanceProposalRequest message.
+message QueryGetGovernanceProposalRequest {
+  string index = 1;
+}
+
+// QueryGetGovernanceProposalResponse defines the QueryGetGovernanceProposalResponse message.
+message QueryGetGovernanceProposalResponse {
+  GovernanceProposal governance_proposal = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryAllGovernanceProposalRequest defines the QueryAllGovernanceProposalRequest message.
+message QueryAllGovernanceProposalRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryAllGovernanceProposalResponse defines the QueryAllGovernanceProposalResponse message.
+message QueryAllGovernanceProposalResponse {
+  repeated GovernanceProposal governance_proposal = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

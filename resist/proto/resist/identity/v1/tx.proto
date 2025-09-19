@@ -1,0 +1,118 @@
+syntax = "proto3";
+
+package resist.identity.v1;
+
+import "amino/amino.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "resist/identity/v1/params.proto";
+
+option go_package = "resist/x/identity/types";
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+
+  // UpdateParams defines a (governance) operation for updating the module
+  // parameters. The authority defaults to the x/gov module account.
+  rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse);
+
+  // RequestChallenge defines the RequestChallenge RPC.
+  rpc RequestChallenge(MsgRequestChallenge) returns (MsgRequestChallengeResponse);
+
+  // VerifySignature defines the VerifySignature RPC.
+  rpc VerifySignature(MsgVerifySignature) returns (MsgVerifySignatureResponse);
+
+  // CreateUserProfile defines the CreateUserProfile RPC.
+  rpc CreateUserProfile(MsgCreateUserProfile) returns (MsgCreateUserProfileResponse);
+
+  // UpdateUserProfile defines the UpdateUserProfile RPC.
+  rpc UpdateUserProfile(MsgUpdateUserProfile) returns (MsgUpdateUserProfileResponse);
+
+  // DeleteUserProfile defines the DeleteUserProfile RPC.
+  rpc DeleteUserProfile(MsgDeleteUserProfile) returns (MsgDeleteUserProfileResponse);
+}
+
+// MsgUpdateParams is the Msg/UpdateParams request type.
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) = "authority";
+  option (amino.name) = "resist/x/identity/MsgUpdateParams";
+
+  // authority is the address that controls the module (defaults to x/gov unless overwritten).
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // params defines the module parameters to update.
+
+  // NOTE: All parameters must be supplied.
+  Params params = 2 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+message MsgUpdateParamsResponse {}
+
+// MsgRequestChallenge defines the MsgRequestChallenge message.
+message MsgRequestChallenge {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string address = 2;
+}
+
+// MsgRequestChallengeResponse defines the MsgRequestChallengeResponse message.
+message MsgRequestChallengeResponse {}
+
+// MsgVerifySignature defines the MsgVerifySignature message.
+message MsgVerifySignature {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string challenge = 2;
+  string signature = 3;
+  string address = 4;
+}
+
+// MsgVerifySignatureResponse defines the MsgVerifySignatureResponse message.
+message MsgVerifySignatureResponse {}
+
+// MsgCreateUserProfile defines the MsgCreateUserProfile message.
+message MsgCreateUserProfile {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+  string display_name = 3;
+  string bio = 4;
+  string avatar_url = 5;
+  bool verified = 6;
+  int64 created_at = 7;
+}
+
+// MsgCreateUserProfileResponse defines the MsgCreateUserProfileResponse message.
+message MsgCreateUserProfileResponse {}
+
+// MsgUpdateUserProfile defines the MsgUpdateUserProfile message.
+message MsgUpdateUserProfile {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+  string display_name = 3;
+  string bio = 4;
+  string avatar_url = 5;
+  bool verified = 6;
+  int64 created_at = 7;
+}
+
+// MsgUpdateUserProfileResponse defines the MsgUpdateUserProfileResponse message.
+message MsgUpdateUserProfileResponse {}
+
+// MsgDeleteUserProfile defines the MsgDeleteUserProfile message.
+message MsgDeleteUserProfile {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string index = 2;
+}
+
+// MsgDeleteUserProfileResponse defines the MsgDeleteUserProfileResponse message.
+message MsgDeleteUserProfileResponse {}

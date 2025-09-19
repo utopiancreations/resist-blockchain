@@ -1,0 +1,16 @@
+syntax = "proto3";
+package resist.posts.v1;
+
+option go_package = "resist/x/posts/types";
+
+// Source defines the Source message.
+message Source {
+  string index = 1;
+  string url = 2;
+  string title = 3;
+  string description = 4;
+  int64 credibility_score = 5;
+  string analysis_summary = 6;
+  bool verified = 7;
+  string creator = 8;
+}

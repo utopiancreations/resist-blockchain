@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package resist.identity.v1;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "resist/identity/v1/params.proto";
+import "resist/identity/v1/user_profile.proto";
+
+option go_package = "resist/x/identity/types";
+
+// GenesisState defines the identity module's genesis state.
+message GenesisState {
+  // params defines all the parameters of the module.
+  Params params = 1 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  repeated UserProfile user_profile_map = 2 [(gogoproto.nullable) = false];
+}

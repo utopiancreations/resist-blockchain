@@ -1,0 +1,15 @@
+syntax = "proto3";
+package resist.identity.v1;
+
+option go_package = "resist/x/identity/types";
+
+// UserProfile defines the UserProfile message.
+message UserProfile {
+  string index = 1;
+  string display_name = 2;
+  string bio = 3;
+  string avatar_url = 4;
+  bool verified = 5;
+  int64 created_at = 6;
+  string creator = 7;
+}

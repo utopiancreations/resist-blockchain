@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package resist.posts.v1;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "resist/posts/v1/params.proto";
+import "resist/posts/v1/post_tag.proto";
+import "resist/posts/v1/social_post.proto";
+import "resist/posts/v1/source.proto";
+import "resist/posts/v1/vote.proto";
+
+option go_package = "resist/x/posts/types";
+
+// GenesisState defines the posts module's genesis state.
+message GenesisState {
+  // params defines all the parameters of the module.
+  Params params = 1 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  repeated SocialPost social_post_map = 2 [(gogoproto.nullable) = false];
+  repeated Vote vote_map = 3 [(gogoproto.nullable) = false];
+  repeated Source source_map = 4 [(gogoproto.nullable) = false];
+  repeated PostTag post_tag_map = 5 [(gogoproto.nullable) = false];
+}
