@@ -1,282 +1,151 @@
-<div align="center">
-  <h1> Ignite </h1>
-</div>
+# Resist Blockchain
 
-<div align="center">
-  <a href="https://github.com/ignite/cli/blob/main/LICENSE">
-    <img alt="License: Apache-2.0" src="https://img.shields.io/github/license/cosmos/cosmos-sdk.svg" />
-  </a>
-  <a href="https://pkg.go.dev/github.com/ignite/cli?tab=doc">
-    <img alt="GoDoc" src="https://pkg.go.dev/badge/github.com/ignite/cli.svg" />
-  </a>
-  <a href="https://goreportcard.com/report/github.com/ignite/cli">
-    <img alt="Go report card" src="https://goreportcard.com/badge/github.com/ignite/cli" />
-  </a>
-<!--
-  <a href="https://codecov.io/gh/ignite/cli">
-    <img alt="Code Coverage" src="https://codecov.io/gh/ignite/cli/branch/main/graph/badge.svg" />
-  </a>
--->
-</div>
-<div align="center">
-  <a href="https://github.com/ignite/cli/actions/workflows/test.yml">
-    <img alt="Test Status" src="https://github.com/ignite/cli/workflows/Test/badge.svg" />
-  <a href="https://github.com/ignite/cli/actions/workflows/test-lint.yml">
-    <img alt="Lint Status" src="https://github.com/ignite/cli/workflows/Lint/badge.svg" />
-  <a href="https://x.com/ignite" target="_blank"><img alt="Twitter" src="https://img.shields.io/twitter/follow/ignite" />
-  <a href="https://discord.com/invite/ignitecli" target="_blank"><img alt="Discord" src="https://img.shields.io/discord/893126937067802685"></a>
-</div>
+**Resist** is a revolutionary social media blockchain built on **Cosmos SDK** that implements **radical acceptance**, **restorative justice**, and **continued education** principles. Created with [Ignite CLI](https://ignite.com/cli), this blockchain enables a new paradigm for online discourse focused on the betterment of humankind, promoting peace and cooperation, and sharing truth.
 
-![Ignite CLI](./assets/ignite-cli.png)
+## 🌟 Core Philosophy
 
-[Ignite CLI](https://ignite.com/cli) is the all-in-one platform to build,
-launch, and maintain any crypto application on a sovereign and secured
-blockchain. It is a developer-friendly interface to the [Cosmos
-SDK](https://github.com/cosmos/cosmos-sdk), the world's most widely-used
-blockchain application framework. Ignite CLI generates boilerplate code for you,
-so you can focus on writing business logic.
+### Radical Acceptance
+- **No Traditional Censorship**: Content remains accessible with educational context
+- **Open Dialogue**: All voices heard with proper source citation and community wisdom
+- **Educational Focus**: Learning and understanding over punishment
 
-## Quick start
+### Restorative Justice
+- **Community-Driven Moderation**: Collective responsibility for discourse quality
+- **Evidence-Based Reporting**: Factual foundation for all moderation actions
+- **Growth-Focused Resolutions**: Learning outcomes rather than punitive measures
 
-Ignite CLI can be installed using popular package managers such as Homebrew and Snap, making it easy to stay up-to-date with the latest versions. These package manager installations are maintained regularly for both macOS and GNU/Linux. For those who prefer manual installation or need to set up a development environment, additional instructions are provided at the end of this section.
+### Continued Education
+- **Source Citation Requirements**: All claims must be backed by credible sources
+- **ML-Powered Analysis**: AI-assisted fact-checking and source credibility scoring
+- **Community Wisdom Integration**: Collective intelligence guides discourse
 
-### Installation
+## 🏗️ Architecture Overview
 
-Install Ignite using [Homebrew](https://formulae.brew.sh/formula/ignite) on macOS and GNU/Linux:
+### Core Modules
 
-```sh
-brew install ignite
-```
+#### 🔐 Identity Module
+- **Challenge-Response Authentication**: No email/password required
+- **Cryptographic Security**: ECDSA secp256k1 signature verification
+- **Automatic Profile Creation**: Seamless onboarding process
 
-Or using Snap on GNU/Linux:
+#### 📝 Posts Module
+- **Enhanced Social Posts**: Title, content, media with source citations
+- **Intent Classification**: "educate", "discuss", "share", "question"
+- **Context Types**: "fact-based", "opinion", "personal-experience", "analysis"
+- **Voting System**: Community-driven upvote/downvote consensus
+- **Source Integration**: ML-ready credibility scoring and analysis
 
-```sh
-snap install ignite --classic
-```
+#### 👥 UserGroups Module
+- **Content Reporting**: Evidence-based community moderation
+- **Governance Proposals**: Democratic decision-making for chain evolution
+- **Restorative Responses**: Educational rather than punitive outcomes
 
-Or manually using the following command:
+#### 🏆 Rewards Module
+- **Contribution Recognition**: Incentivizing quality discourse and fact-sharing
+- **Community Building**: Rewarding constructive participation
 
-```sh
-curl https://get.ignite.com/cli! | bash
-```
+### 🤖 ML Integration Points
 
-<details>
-  <summary>Troubleshoot</summary>
+#### Source Analysis System
+- **Credibility Scoring**: 0-100 ML-powered reliability assessment
+- **Content Analysis**: AI-powered source browsing and information digest
+- **Verification Tracking**: Community and expert source validation
 
-If Ignite doesn't automatically move to your `/usr/local/bin` directory, use the following command:
+#### Content Clustering
+- **Smart Tagging**: Automated content categorization
+- **Similarity Scoring**: ML-powered content clustering for discussion centralization
+- **Related Post Discovery**: Cross-reference system to prevent fragmentation
 
-```sh
-sudo mv ignite /usr/local/bin
-```
+## 🚀 Getting Started
 
-If you encounter an error, you may need to create the `/usr/local/bin` directory and set the necessary permissions:
+### Development Setup
 
-```sh
-mkdir /usr/local/bin
-sudo chown -R $(whoami) /usr/local/bin
-```
-
-</details>
-
-To create and start a blockchain:
-
-```sh
-ignite scaffold chain mars
-
-cd mars
-
+```bash
+# Start the blockchain in development mode
 ignite chain serve
+
+# Reset and start fresh (if needed)
+ignite chain serve --verbose --reset-once
 ```
 
-The instructions for installing Ignite CLI manually and configuring your system are provided below.
+### API Development
 
-<details>
-  <summary>View development setup instructions</summary>
+The blockchain provides comprehensive **REST/gRPC APIs** for lite node development:
 
-#### Supported Operating Systems
+- **Identity**: Authentication and user profiles
+- **Posts**: Social content creation, voting, and source citation
+- **UserGroups**: Governance, reporting, and community moderation
+- **Rewards**: Contribution tracking and incentivization
 
-- GNU/Linux
-- macOS
+See `api-documentation.md` for complete endpoint specifications.
 
-#### Install Go
+### Testing Status ✅
 
-1. Install the latest version of Go.
-2. Download the release suitable for your system.
-3. Follow the installation instructions.
+Comprehensive testing completed with full validation of:
+- Authentication system functionality
+- Voting and consensus mechanisms
+- Content moderation workflow
+- Governance proposal system
+- Source citation and tagging
+- API endpoint functionality
 
-**Note:** We recommend not using `brew` to install Go.
+See `TEST-VALIDATION-REPORT.md` for detailed validation results.
 
-#### Add the Go bin Directory to Your PATH
+## 🔗 Key Features
 
-1. Edit your `~/.bashrc` file and add the following line:
+### For Users
+- **Source-Required Posts**: Cite credible sources for claims
+- **Intent-Driven Content**: Clear purpose classification for better understanding
+- **Community Moderation**: Participate in restorative justice processes
+- **Democratic Governance**: Vote on platform evolution proposals
 
-   ```sh
-   export PATH=$PATH:$(go env GOPATH)/bin
-   ```
+### For Developers
+- **Modular Architecture**: Independent, scalable blockchain modules
+- **ML-Ready Integration**: Prepared endpoints for AI/ML system integration
+- **Comprehensive APIs**: Full REST/gRPC support for any frontend
+- **Real-Time Updates**: WebSocket architecture for live content
 
-2. Apply the changes:
+### For Communities
+- **Truth-Focused Platform**: Evidence-based discourse with source verification
+- **Peace-Promoting Design**: Restorative rather than punitive moderation
+- **Educational Outcomes**: Learning and growth from conflicts
+- **Collective Intelligence**: Community-driven wisdom and decision-making
 
-   ```sh
-   source ~/.bashrc
-   ```
+## 📱 Frontend Development
 
-#### Remove Existing Ignite CLI Installations
+### Lite Node Architecture
+- **Offline Capability**: Selective content synchronization
+- **Content Filtering**: User-defined topic and context preferences
+- **Rate Limiting**: Fair usage controls for sustainable operation
+- **Real-Time Sync**: WebSocket integration for live updates
 
-1. Remove the Ignite CLI binary:
+### Recommended Stack
+- **Vue.js Frontend**: Use `ignite scaffold vue` for quick setup
+- **API Integration**: Comprehensive REST/gRPC endpoint documentation available
+- **ML Integration**: Source analysis and content clustering APIs ready
 
-   ```sh
-   rm $(which ignite)
-   ```
+## Release
+To release a new version of your blockchain, create and push a new tag with `v` prefix. A new draft release with the configured targets will be created.
 
-   You may need to run this with `sudo`.
-
-2. Repeat the step until all Ignite CLI installations are removed.
-
-#### Install Ignite CLI
-
-```sh
-curl https://get.ignite.com/cli! | bash
+```
+git tag v0.1
+git push origin v0.1
 ```
 
-#### Clone the Ignite CLI Repo
+After a draft release is created, make your final changes from the release page and publish it.
 
-1. Clone the repository:
+### Install
+To install the latest version of your blockchain node's binary, execute the following command on your machine:
 
-   ```sh
-   git clone --depth=1 git@github.com:ignite/cli.git
-   ```
-
-2. Change to the `cli` directory:
-
-   ```sh
-   cd cli
-   ```
-
-#### Run make install
-
-```sh
-make install
 ```
-
-#### Verify Your Ignite CLI Version
-
-```sh
-ignite version
+curl https://get.ignite.com/username/resist@latest! | sudo bash
 ```
+`username/resist` should match the `username` and `repo_name` of the Github repository to which the source code was pushed. Learn more about [the install process](https://github.com/ignite/installer).
 
-</details>
+## Learn more
 
-Alternatively, you can open Ignite CLI directly in your web browser via [GitHub Codespaces](https://github.com/features/codespaces): [Open in GitHub Codespaces](https://github.dev/ignite/cli).
-
-## Documentation
-
-To learn how to use Ignite CLI, check out the [Ignite CLI
-docs](https://docs.ignite.com). To learn more about how to build blockchain apps
-with Ignite CLI, see the [Ignite CLI Developer
-Tutorials](https://tutorials.ignite.com).
-
-To install Ignite CLI locally on GNU, Linux, or macOS, see [Install Ignite
-CLI](https://docs.ignite.com/welcome/install).
-
-To learn more about building a JavaScript frontend for your Cosmos SDK
-blockchain, see [ignite/web](https://github.com/ignite/web).
-
-## Questions
-
-For questions and support, join the official [Ignite
-Discord](https://discord.gg/ignite) server. The issue list in this repo is
-exclusively for bug reports and feature requests.
-
-## Cosmos SDK compatibility
-
-Blockchains created with Ignite CLI use the [Cosmos
-SDK](https://github.com/cosmos/cosmos-sdk) framework. To ensure the best
-possible experience, use the version of Ignite CLI that corresponds to the
-version of Cosmos SDK that your blockchain is built with. Unless noted
-otherwise, a row refers to a minor version and all associated patch versions.
-
-| Ignite CLI  | Cosmos SDK        | IBC                  | Notes                                                         |
-| ----------- | ----------------- | -------------------- | ------------------------------------------------------------- |
-| v29.x.y     | v0.50.x & v0.53.x | v10.2.0              | Originally in v0.53.x. Can work with v0.50.x.                 |
-| v28.x.y     | v0.50.x & v0.53.x | v8.0.0               | Originally in v0.50.x. Can work with v0.53.x.                 |
-| v0.27.1     | v0.47.3           | v7.1.0               | -                                                             |
-| v0.26.0     | v0.46.7           | v6.1.0               | -                                                             |
-| v0.25.2     | v0.46.6           | v5.1.0               | Bump Tendermint version to v0.34.24                           |
-| v0.25.1     | v0.46.3           | v5.0.0               | Includes Dragonberry security fix                             |
-| ~~v0.24.0~~ | ~~v0.46.0~~       | ~~v5.0.0~~           | This version is deprecated due to a security fix in `v0.25.0` |
-| v0.23.0     | v0.45.5           | v3.0.1               |                                                               |
-| v0.21.1     | v0.45.4           | v2.0.3               | Supports Cosmos SDK v0.46.0-alpha1 and above                  |
-| v0.21.0     | v0.45.4           | v2.0.3               |                                                               |
-| v0.20.0     | v0.45.3           | v2.0.3               |                                                               |
-| v0.19       | v0.44             | v1.2.2               |                                                               |
-| v0.18       | v0.44             | v1.2.2               | `ignite chain serve` works with v0.44.x chains                |
-| v0.17       | v0.42             | Same with Cosmos SDK |                                                               |
-
-To upgrade your blockchain to the newer version of Cosmos SDK, see the
-[Migration guide](https://docs.ignite.com/migration).
-
-## Ignite Apps
-
-[Ignite Apps](https://ignite.com/marketplace) aims to extend the functionality of Ignite CLI, offering both official and community-contributed integrations. These integrations are designed to streamline development processes and offer valuable insights for blockchain app developers.
-
-### Discover Ignite Apps
-
-You can discover available Ignite Apps in the [Ignite Marketplace](https://ignite.com/marketplace). The marketplace features a variety of apps that can enhance your development experience, including tools for scaffolding, deploying, and more.
-
-### How to Install an Ignite App
-
-```bash
-ignite app install -g github.com/ignite/apps/[app-name]
-```
-
-The `ignite app list` command allows to list the plugins and their status, and to
-update a plugin if you need to get the latest version.
-
-### How to Create an App
-
-Scaffold your Ignite app with one simple command:
-
-```bash
-ignite scaffold app path/to/your/app
-```
-
-Afterwards, install using:
-
-```bash
-ignite app install -g path/to/your/app
-```
-
-For more information, refer to [Creating Ignite Apps](https://docs.ignite.com/apps/developing-apps).
-
-Also check out the section of our [example Apps](https://github.com/ignite/apps/tree/main/examples).
-
-## Contributing to Ignite CLI
-
-We welcome contributions from everyone. The `main` branch contains the
-development version of the code. You can create a branch from `main` and
-create a pull request, or maintain your own fork and submit a cross-repository
-pull request.
-
-Our Ignite CLI bounty program provides incentives for your participation and
-pays rewards. Track new, in-progress, and completed bounties in the [GitHub Issues
-board](https://github.com/ignite/cli/issues?q=is%3Aissue+is%3Aopen+label%3Abounty).
-
-**Important** Before you start implementing a new Ignite CLI feature, the first
-step is to create an issue on GitHub that describes the proposed changes.
-
-If you're not sure where to start, check out [contributing.md](contributing.md)
-for our guidelines and policies for how we develop Ignite CLI. Thank you to
-everyone who has contributed to Ignite CLI!
-
-## Community
-
-Ignite CLI is a free and open source product maintained by
-[Ignite](https://ignite.com). Here's where you can find us. Stay in touch.
-
-- [ignite.com website](https://ignite.com)
-- [@ignite on Twitter](https://x.com/ignite)
-- [ignite.com/blog](https://ignite.com/blog)
-- [Ignite Discord](https://discord.com/invite/ignitecli)
-- [Ignite YouTube](https://www.youtube.com/@ignitehq)
-- [Ignite docs](https://docs.ignite.com)
-- [Ignite jobs](https://ignite.com/careers)
+- [Ignite CLI](https://ignite.com/cli)
+- [Tutorials](https://docs.ignite.com/guide)
+- [Ignite CLI docs](https://docs.ignite.com)
+- [Cosmos SDK docs](https://docs.cosmos.network)
+- [Developer Chat](https://discord.com/invite/ignitecli)
