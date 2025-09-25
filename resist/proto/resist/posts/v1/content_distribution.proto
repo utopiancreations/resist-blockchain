@@ -1,0 +1,66 @@
+syntax = "proto3";
+package resist.posts.v1;
+
+option go_package = "resist/x/posts/types";
+
+// ContentDistribution handles decentralized content storage and sync
+message ContentDistribution {
+  string content_id = 1;
+  string ipfs_hash = 2;            // IPFS content hash
+  repeated string mirror_nodes = 3; // Nodes that have copies
+  string signal_channel = 4;       // Signal protocol channel for secure messaging
+  ContentReplication replication = 5;
+  int64 created_at = 6;
+  int64 last_sync = 7;
+}
+
+// ContentReplication defines replication strategy and status
+message ContentReplication {
+  uint32 target_replicas = 1;      // Desired number of replicas
+  uint32 current_replicas = 2;     // Current number of replicas
+  repeated string replica_nodes = 3; // Nodes storing replicas
+  string replication_strategy = 4;  // "geographic", "random", "performance"
+  uint64 total_size_bytes = 5;     // Total content size
+}
+
+// HubSync manages synchronization between hubs
+message HubSync {
+  string sync_id = 1;
+  string source_node = 2;
+  string target_node = 3;
+  repeated string content_ids = 4;
+  string status = 5;               // "pending", "syncing", "completed", "failed"
+  int64 started_at = 6;
+  int64 completed_at = 7;
+  uint64 bytes_transferred = 8;
+  string sync_method = 9;          // "full", "incremental", "selective"
+}
+
+// SignalMessage for secure node-to-node communication
+message SignalMessage {
+  string message_id = 1;
+  string sender_node = 2;
+  string recipient_node = 3;
+  string channel_id = 4;           // Signal protocol channel
+  bytes encrypted_payload = 5;     // Signal-encrypted message
+  string message_type = 6;         // "sync_request", "content_offer", "resource_alert"
+  int64 timestamp = 7;
+  string signature = 8;            // Message signature for authenticity
+}
+
+// ContentMetadata for efficient discovery and routing
+message ContentMetadata {
+  string content_id = 1;
+  string content_type = 2;         // "text", "image", "video", "document"
+  string title = 3;
+  string description = 4;
+  repeated string tags = 5;
+  uint64 size_bytes = 6;
+  string mime_type = 7;
+  string language = 8;
+  bool is_nsfw = 9;
+  int64 created_at = 10;
+  string creator = 11;
+  uint64 view_count = 12;
+  repeated string related_content = 13;
+}

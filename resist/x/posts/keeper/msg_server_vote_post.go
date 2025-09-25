@@ -25,14 +25,13 @@ func (k msgServer) VotePost(ctx context.Context, msg *types.MsgVotePost) (*types
 	sdkCtx := sdk.UnwrapSDKContext(ctx)
 
 	// Find the social post
-	postIndex := strconv.FormatUint(msg.PostId, 10)
-	post, err := k.SocialPost.Get(ctx, postIndex)
+	post, err := k.SocialPost.Get(ctx, msg.PostIndex)
 	if err != nil {
-		return nil, errorsmod.Wrap(sdkerrors.ErrNotFound, "post not found")
+		return nil, errorsmod.Wrap(types.ErrInvalidInput, "post not found")
 	}
 
-	// Create unique vote key (voter_address:post_id)
-	voteKey := fmt.Sprintf("%s:%d", msg.Creator, msg.PostId)
+	// Create unique vote key (voter_address:post_index)
+	voteKey := fmt.Sprintf("%s:%s", msg.Creator, msg.PostIndex)
 
 	// Check if user already voted
 	existingVote, err := k.Vote.Get(ctx, voteKey)
@@ -76,7 +75,7 @@ func (k msgServer) VotePost(ctx context.Context, msg *types.MsgVotePost) (*types
 			Creator:      msg.Creator,
 			Index:        voteKey,
 			VoterAddress: msg.Creator,
-			PostId:       msg.PostId,
+			PostIndex:    msg.PostIndex,
 			VoteType:     msg.VoteType,
 			Timestamp:    sdkCtx.BlockTime().Unix(),
 		}
@@ -87,7 +86,7 @@ func (k msgServer) VotePost(ctx context.Context, msg *types.MsgVotePost) (*types
 	}
 
 	// Update the post with new vote counts
-	if err := k.SocialPost.Set(ctx, postIndex, post); err != nil {
+	if err := k.SocialPost.Set(ctx, msg.PostIndex, post); err != nil {
 		return nil, errorsmod.Wrap(err, "failed to update post vote counts")
 	}
 
@@ -96,7 +95,7 @@ func (k msgServer) VotePost(ctx context.Context, msg *types.MsgVotePost) (*types
 		sdk.NewEvent(
 			"post_voted",
 			sdk.NewAttribute("voter", msg.Creator),
-			sdk.NewAttribute("post_id", strconv.FormatUint(msg.PostId, 10)),
+			sdk.NewAttribute("post_index", msg.PostIndex),
 			sdk.NewAttribute("vote_type", msg.VoteType),
 			sdk.NewAttribute("upvotes", strconv.FormatUint(post.Upvotes, 10)),
 			sdk.NewAttribute("downvotes", strconv.FormatUint(post.Downvotes, 10)),

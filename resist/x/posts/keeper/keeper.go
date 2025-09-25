@@ -47,7 +47,11 @@ func NewKeeper(
 		authority:    authority,
 
 		Params:     collections.NewItem(sb, types.ParamsKey, "params", codec.CollValue[types.Params](cdc)),
-		SocialPost: collections.NewMap(sb, types.SocialPostKey, "socialPost", collections.StringKey, codec.CollValue[types.SocialPost](cdc)), Vote: collections.NewMap(sb, types.VoteKey, "vote", collections.StringKey, codec.CollValue[types.Vote](cdc)), Source: collections.NewMap(sb, types.SourceKey, "source", collections.StringKey, codec.CollValue[types.Source](cdc)), PostTag: collections.NewMap(sb, types.PostTagKey, "postTag", collections.StringKey, codec.CollValue[types.PostTag](cdc))}
+		SocialPost: collections.NewMap(sb, types.SocialPostKey, "socialPost", collections.StringKey, codec.CollValue[types.SocialPost](cdc)),
+		Vote:       collections.NewMap(sb, types.VoteKey, "vote", collections.StringKey, codec.CollValue[types.Vote](cdc)),
+		Source:     collections.NewMap(sb, types.SourceKey, "source", collections.StringKey, codec.CollValue[types.Source](cdc)),
+		PostTag:    collections.NewMap(sb, types.PostTagKey, "postTag", collections.StringKey, codec.CollValue[types.PostTag](cdc)),
+	}
 
 	schema, err := sb.Build()
 	if err != nil {

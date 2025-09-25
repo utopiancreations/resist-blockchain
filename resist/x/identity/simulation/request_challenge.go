@@ -7,6 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
+	"github.com/cosmos/cosmos-sdk/x/simulation"
 
 	"resist/x/identity/keeper"
 	"resist/x/identity/types"
@@ -23,10 +24,22 @@ func SimulateMsgRequestChallenge(
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		msg := &types.MsgRequestChallenge{
 			Creator: simAccount.Address.String(),
+			Address: simAccount.Address.String(),
 		}
 
-		// TODO: Handle the RequestChallenge simulation
-
-		return simtypes.NoOpMsg(types.ModuleName, sdk.MsgTypeURL(msg), "RequestChallenge simulation not implemented"), nil, nil
+		txCtx := simulation.OperationInput{
+			R:               r,
+			App:             app,
+			TxGen:           txGen,
+			Cdc:             nil,
+			Msg:             msg,
+			Context:         ctx,
+			SimAccount:      simAccount,
+			ModuleName:      types.ModuleName,
+			CoinsSpentInMsg: sdk.NewCoins(),
+			AccountKeeper:   ak,
+			Bankkeeper:      bk,
+		}
+		return simulation.GenAndDeliverTxWithRandFees(txCtx)
 	}
 }

@@ -7,6 +7,8 @@ import "cosmos/msg/v1/msg.proto";
 import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "resist/rewards/v1/params.proto";
+import "resist/rewards/v1/node.proto";
+import "resist/rewards/v1/resource_allocation.proto";
 
 option go_package = "resist/x/rewards/types";
 
@@ -20,6 +22,18 @@ service Msg {
 
   // RegisterNode defines the RegisterNode RPC.
   rpc RegisterNode(MsgRegisterNode) returns (MsgRegisterNodeResponse);
+
+  // UpdateNodeResources defines the UpdateNodeResources RPC.
+  rpc UpdateNodeResources(MsgUpdateNodeResources) returns (MsgUpdateNodeResourcesResponse);
+
+  // CreateResourceOffer defines the CreateResourceOffer RPC.
+  rpc CreateResourceOffer(MsgCreateResourceOffer) returns (MsgCreateResourceOfferResponse);
+
+  // AllocateResources defines the AllocateResources RPC.
+  rpc AllocateResources(MsgAllocateResources) returns (MsgAllocateResourcesResponse);
+
+  // DeallocateResources defines the DeallocateResources RPC.
+  rpc DeallocateResources(MsgDeallocateResources) returns (MsgDeallocateResourcesResponse);
 }
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
@@ -50,7 +64,66 @@ message MsgRegisterNode {
   string node_id = 2;
   string node_type = 3;
   uint64 stake_amount = 4;
+  ResourceSpec available_resources = 5;
+  string location = 6;
+  repeated string supported_content_types = 7;
+  uint64 bandwidth_mbps = 8;
 }
 
 // MsgRegisterNodeResponse defines the MsgRegisterNodeResponse message.
 message MsgRegisterNodeResponse {}
+
+// MsgUpdateNodeResources defines the MsgUpdateNodeResources message.
+message MsgUpdateNodeResources {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string node_id = 2;
+  ResourceSpec available_resources = 3;
+  uint64 uptime_percentage = 4;
+}
+
+// MsgUpdateNodeResourcesResponse defines the response.
+message MsgUpdateNodeResourcesResponse {}
+
+// MsgCreateResourceOffer defines the MsgCreateResourceOffer message.
+message MsgCreateResourceOffer {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string node_id = 2;
+  ResourceSpec offered_resources = 3;
+  uint64 price_per_hour = 4;
+  repeated string content_types = 5;
+}
+
+// MsgCreateResourceOfferResponse defines the response.
+message MsgCreateResourceOfferResponse {
+  string offer_id = 1;
+}
+
+// MsgAllocateResources defines the MsgAllocateResources message.
+message MsgAllocateResources {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string offer_id = 2;
+  string content_id = 3;
+  ResourceSpec requested_resources = 4;
+  int64 duration_hours = 5;
+}
+
+// MsgAllocateResourcesResponse defines the response.
+message MsgAllocateResourcesResponse {
+  string allocation_id = 1;
+  uint64 total_cost = 2;
+}
+
+// MsgDeallocateResources defines the MsgDeallocateResources message.
+message MsgDeallocateResources {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string allocation_id = 2;
+}
+
+// MsgDeallocateResourcesResponse defines the response.
+message MsgDeallocateResourcesResponse {
+  uint64 refund_amount = 1;
+}

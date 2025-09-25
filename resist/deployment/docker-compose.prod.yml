@@ -1,0 +1,197 @@
+version: '3.8'
+
+services:
+  # Main Resist blockchain node
+  resist-node:
+    image: resist-blockchain:latest
+    container_name: resist-node
+    restart: unless-stopped
+    ports:
+      - "26656:26656"  # P2P port
+      - "26657:26657"  # RPC port
+      - "1317:1317"    # REST API port
+      - "9090:9090"    # gRPC port
+    volumes:
+      - blockchain-data:/root/.resist
+      - ./config:/root/.resist/config
+      - ./genesis.json:/root/.resist/config/genesis.json
+    environment:
+      - CHAIN_ID=resist-mainnet-1
+      - MONIKER=resist-main-node
+      - MINIMUM_GAS_PRICES=0.025stake
+    mem_limit: 8g
+    cpus: 3
+    command: |
+      sh -c "
+        resistd start --rpc.laddr=tcp://0.0.0.0:26657
+        --grpc.address=0.0.0.0:9090
+        --api.address=tcp://0.0.0.0:1317
+        --api.enable=true
+        --api.swagger=true
+      "
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:26657/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Mobile API Gateway
+  mobile-api:
+    build: ./mobile-api
+    container_name: mobile-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./mobile-api:/app
+    environment:
+      - NODE_ENV=production
+      - BLOCKCHAIN_RPC=http://resist-node:26657
+      - BLOCKCHAIN_API=http://resist-node:1317
+      - SIGNAL_ENDPOINT=ws://signal-server:8080
+    mem_limit: 2g
+    depends_on:
+      - resist-node
+      - signal-server
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # IPFS node for content distribution
+  ipfs-node:
+    image: ipfs/kubo:latest
+    container_name: ipfs-node
+    restart: unless-stopped
+    ports:
+      - "4001:4001"    # IPFS swarm port
+      - "5001:5001"    # IPFS API port
+      - "8080:8080"    # IPFS gateway port
+    volumes:
+      - ipfs-data:/data/ipfs
+    environment:
+      - IPFS_PROFILE=server
+      - IPFS_PATH=/data/ipfs
+    mem_limit: 4g
+    command: |
+      sh -c "
+        ipfs init --profile=server &&
+        ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '[\"*\"]' &&
+        ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '[\"GET\", \"POST\", \"PUT\", \"DELETE\"]' &&
+        ipfs config --json API.HTTPHeaders.Access-Control-Allow-Headers '[\"Authorization\", \"Content-Type\"]' &&
+        ipfs daemon --migrate=true --agent-version-suffix=resist-node
+      "
+
+  # Signal Protocol server for secure messaging
+  signal-server:
+    build: ./signal-server
+    container_name: signal-server
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - signal-data:/app/data
+    environment:
+      - NODE_ENV=production
+      - DB_PATH=/app/data/signal.db
+    mem_limit: 2g
+    command: ["node", "server.js"]
+
+  # Nginx reverse proxy with SSL
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/sites:/etc/nginx/sites-available
+      - ./ssl:/etc/ssl/certs
+      - /var/log/nginx:/var/log/nginx
+    depends_on:
+      - resist-node
+      - mobile-api
+      - ipfs-node
+    mem_limit: 512m
+
+  # Monitoring with Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+    mem_limit: 1g
+
+  # Grafana for monitoring dashboard
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=resist_admin_2024
+      - GF_USERS_ALLOW_SIGN_UP=false
+    mem_limit: 1g
+
+  # Redis for caching and session management
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --maxmemory 1gb --maxmemory-policy allkeys-lru
+    mem_limit: 1g
+
+  # Backup service
+  backup:
+    image: alpine:latest
+    container_name: backup
+    restart: "no"
+    volumes:
+      - blockchain-data:/backup/blockchain:ro
+      - ipfs-data:/backup/ipfs:ro
+      - ./backups:/backups
+    command: |
+      sh -c "
+        apk add --no-cache tar gzip &&
+        tar -czf /backups/blockchain-backup-$(date +%Y%m%d-%H%M%S).tar.gz -C /backup blockchain &&
+        tar -czf /backups/ipfs-backup-$(date +%Y%m%d-%H%M%S).tar.gz -C /backup ipfs &&
+        find /backups -name '*.tar.gz' -mtime +7 -delete
+      "
+
+volumes:
+  blockchain-data:
+    driver: local
+  ipfs-data:
+    driver: local
+  signal-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+  redis-data:
+    driver: local
+
+networks:
+  default:
+    name: resist-network

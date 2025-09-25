@@ -1,0 +1,30 @@
+syntax = "proto3";
+package resist.rewards.v1;
+
+option go_package = "resist/x/rewards/types";
+
+// Node represents a registered node in the rewards system
+message Node {
+  string node_id = 1;
+  string owner = 2;
+  string node_type = 3;
+  uint64 stake_amount = 4;
+  int64 created_at = 5;
+  bool is_active = 6;
+
+  // Resource allocation fields for hub functionality
+  ResourceSpec available_resources = 7;
+  ResourceSpec allocated_resources = 8;
+  string location = 9;
+  repeated string supported_content_types = 10;
+  uint64 uptime_percentage = 11;
+  uint64 bandwidth_mbps = 12;
+}
+
+// ResourceSpec defines the computing resources available/allocated
+message ResourceSpec {
+  uint64 cpu_cores = 1;        // Number of CPU cores
+  uint64 memory_gb = 2;        // Memory in GB
+  uint64 storage_gb = 3;       // Storage in GB
+  uint64 bandwidth_mbps = 4;   // Network bandwidth in Mbps
+}

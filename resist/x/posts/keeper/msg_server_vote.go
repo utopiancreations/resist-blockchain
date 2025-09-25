@@ -29,7 +29,7 @@ func (k msgServer) CreateVote(ctx context.Context, msg *types.MsgCreateVote) (*t
 		Creator:      msg.Creator,
 		Index:        msg.Index,
 		VoterAddress: msg.VoterAddress,
-		PostId:       msg.PostId,
+		PostIndex:    msg.PostIndex,
 		VoteType:     msg.VoteType,
 		Timestamp:    msg.Timestamp,
 	}
@@ -65,7 +65,7 @@ func (k msgServer) UpdateVote(ctx context.Context, msg *types.MsgUpdateVote) (*t
 		Creator:      msg.Creator,
 		Index:        msg.Index,
 		VoterAddress: msg.VoterAddress,
-		PostId:       msg.PostId,
+		PostIndex:    msg.PostIndex,
 		VoteType:     msg.VoteType,
 		Timestamp:    msg.Timestamp,
 	}

@@ -17,3 +17,15 @@ const (
 
 // ParamsKey is the prefix to retrieve all Params
 var ParamsKey = collections.NewPrefix("p_rewards")
+
+// NodesKey defines the key to store registered nodes
+var NodesKey = collections.NewPrefix("nodes")
+
+// ResourceOffersKey defines the key to store resource offers
+var ResourceOffersKey = collections.NewPrefix("resource_offers")
+
+// ResourceAllocationsKey defines the key to store resource allocations
+var ResourceAllocationsKey = collections.NewPrefix("resource_allocations")
+
+// HubMetricsKey defines the key to store hub metrics
+var HubMetricsKey = collections.NewPrefix("hub_metrics")

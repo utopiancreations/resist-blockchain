@@ -28,7 +28,7 @@ func (k msgServer) CreatePostTag(ctx context.Context, msg *types.MsgCreatePostTa
 	var postTag = types.PostTag{
 		Creator:         msg.Creator,
 		Index:           msg.Index,
-		PostId:          msg.PostId,
+		PostIndex:       msg.PostIndex,
 		Tag:             msg.Tag,
 		Category:        msg.Category,
 		SimilarityScore: msg.SimilarityScore,
@@ -65,7 +65,7 @@ func (k msgServer) UpdatePostTag(ctx context.Context, msg *types.MsgUpdatePostTa
 	var postTag = types.PostTag{
 		Creator:         msg.Creator,
 		Index:           msg.Index,
-		PostId:          msg.PostId,
+		PostIndex:       msg.PostIndex,
 		Tag:             msg.Tag,
 		Category:        msg.Category,
 		SimilarityScore: msg.SimilarityScore,

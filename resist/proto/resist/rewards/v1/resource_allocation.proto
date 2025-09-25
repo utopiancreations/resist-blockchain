@@ -1,0 +1,45 @@
+syntax = "proto3";
+package resist.rewards.v1;
+
+option go_package = "resist/x/rewards/types";
+
+import "resist/rewards/v1/node.proto";
+
+// ResourceAllocation tracks resource usage by content/services
+message ResourceAllocation {
+  string allocation_id = 1;
+  string content_id = 2;           // ID of content being served
+  string node_id = 3;              // Node providing resources
+  string requester = 4;            // Address requesting resources
+  ResourceSpec requested_resources = 5;
+  ResourceSpec allocated_resources = 6;
+  int64 start_time = 7;
+  int64 end_time = 8;
+  string status = 9;               // "pending", "active", "completed", "cancelled"
+  uint64 cost_per_hour = 10;       // Cost in tokens per hour
+  uint64 total_cost = 11;          // Total cost for allocation
+}
+
+// ResourceMarketplace for resource pricing and discovery
+message ResourceOffer {
+  string offer_id = 1;
+  string node_id = 2;
+  string owner = 3;
+  ResourceSpec available_resources = 4;
+  uint64 price_per_hour = 5;       // Price in tokens per hour
+  repeated string content_types = 6; // Supported content types
+  string location = 7;
+  bool is_active = 8;
+  int64 created_at = 9;
+}
+
+// Hub metrics for performance tracking
+message HubMetrics {
+  string node_id = 1;
+  uint64 total_allocations = 2;
+  uint64 active_allocations = 3;
+  uint64 total_revenue = 4;
+  uint64 uptime_seconds = 5;
+  uint64 data_served_gb = 6;
+  int64 last_updated = 7;
+}

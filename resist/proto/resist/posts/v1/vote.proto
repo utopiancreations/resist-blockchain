@@ -7,7 +7,7 @@ option go_package = "resist/x/posts/types";
 message Vote {
   string index = 1;
   string voter_address = 2;
-  uint64 post_id = 3;
+  string post_index = 3;
   string vote_type = 4;
   int64 timestamp = 5;
   string creator = 6;

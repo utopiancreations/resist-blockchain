@@ -2,11 +2,13 @@ package keeper
 
 import (
 	"fmt"
+	"strings"
 
 	"cosmossdk.io/collections"
 	"cosmossdk.io/core/address"
 	corestore "cosmossdk.io/core/store"
 	"github.com/cosmos/cosmos-sdk/codec"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"resist/x/identity/types"
 )
@@ -58,4 +60,23 @@ func NewKeeper(
 // GetAuthority returns the module's authority.
 func (k Keeper) GetAuthority() []byte {
 	return k.authority
+}
+
+// GetChallenge returns the challenge for a given address.
+func (k Keeper) GetChallenge(ctx sdk.Context, address string) (string, error) {
+	store := k.storeService.OpenKVStore(ctx)
+	challengeKey := fmt.Sprintf("challenge:%s", address)
+	challengeData, err := store.Get([]byte(challengeKey))
+	if err != nil {
+		return "", err
+	}
+	if challengeData == nil {
+		return "", nil
+	}
+
+	parts := strings.Split(string(challengeData), ":")
+	if len(parts) != 2 {
+		return "", fmt.Errorf("invalid challenge data")
+	}
+	return parts[0], nil
 }
