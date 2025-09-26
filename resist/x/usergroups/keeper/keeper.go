@@ -35,7 +35,7 @@ func NewKeeper(
 	authority []byte,
 
 	bankKeeper types.BankKeeper,
-) Keeper {
+) *Keeper {
 	if _, err := addressCodec.BytesToString(authority); err != nil {
 		panic(fmt.Sprintf("invalid authority address %s: %s", authority, err))
 	}
@@ -58,7 +58,7 @@ func NewKeeper(
 	}
 	k.Schema = schema
 
-	return k
+	return &k
 }
 
 // GetAuthority returns the module's authority.

@@ -84,9 +84,9 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 				},
 				{
 					RpcMethod:      "VotePost",
-					Use:            "vote-post [post-id] [vote-type]",
+					Use:            "vote-post [post-index] [vote-type]",
 					Short:          "Send a vote-post tx",
-					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "post_id"}, {ProtoField: "vote_type"}},
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "post_index"}, {ProtoField: "vote_type"}},
 				},
 				{
 					RpcMethod:      "CreateSocialPost",
@@ -108,15 +108,15 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 				},
 				{
 					RpcMethod:      "CreateVote",
-					Use:            "create-vote [index] [voter-address] [post-id] [vote-type] [timestamp]",
+					Use:            "create-vote [index] [voter-address] [post-index] [vote-type] [timestamp]",
 					Short:          "Create a new vote",
-					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "index"}, {ProtoField: "voter_address"}, {ProtoField: "post_id"}, {ProtoField: "vote_type"}, {ProtoField: "timestamp"}},
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "index"}, {ProtoField: "voter_address"}, {ProtoField: "post_index"}, {ProtoField: "vote_type"}, {ProtoField: "timestamp"}},
 				},
 				{
 					RpcMethod:      "UpdateVote",
-					Use:            "update-vote [index] [voter-address] [post-id] [vote-type] [timestamp]",
+					Use:            "update-vote [index] [voter-address] [post-index] [vote-type] [timestamp]",
 					Short:          "Update vote",
-					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "index"}, {ProtoField: "voter_address"}, {ProtoField: "post_id"}, {ProtoField: "vote_type"}, {ProtoField: "timestamp"}},
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "index"}, {ProtoField: "voter_address"}, {ProtoField: "post_index"}, {ProtoField: "vote_type"}, {ProtoField: "timestamp"}},
 				},
 				{
 					RpcMethod:      "DeleteVote",
@@ -144,15 +144,15 @@ func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
 				},
 				{
 					RpcMethod:      "CreatePostTag",
-					Use:            "create-post-tag [index] [post-id] [tag] [category] [similarity-score] [related-posts]",
+					Use:            "create-post-tag [index] [post-index] [tag] [category] [similarity-score] [related-posts]",
 					Short:          "Create a new post-tag",
-					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "index"}, {ProtoField: "post_id"}, {ProtoField: "tag"}, {ProtoField: "category"}, {ProtoField: "similarity_score"}, {ProtoField: "related_posts"}},
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "index"}, {ProtoField: "post_index"}, {ProtoField: "tag"}, {ProtoField: "category"}, {ProtoField: "similarity_score"}, {ProtoField: "related_posts"}},
 				},
 				{
 					RpcMethod:      "UpdatePostTag",
-					Use:            "update-post-tag [index] [post-id] [tag] [category] [similarity-score] [related-posts]",
+					Use:            "update-post-tag [index] [post-index] [tag] [category] [similarity-score] [related-posts]",
 					Short:          "Update post-tag",
-					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "index"}, {ProtoField: "post_id"}, {ProtoField: "tag"}, {ProtoField: "category"}, {ProtoField: "similarity_score"}, {ProtoField: "related_posts"}},
+					PositionalArgs: []*autocliv1.PositionalArgDescriptor{{ProtoField: "index"}, {ProtoField: "post_index"}, {ProtoField: "tag"}, {ProtoField: "category"}, {ProtoField: "similarity_score"}, {ProtoField: "related_posts"}},
 				},
 				{
 					RpcMethod:      "DeletePostTag",
