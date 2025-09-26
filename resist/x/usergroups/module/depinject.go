@@ -40,7 +40,7 @@ type ModuleInputs struct {
 type ModuleOutputs struct {
 	depinject.Out
 
-	UsergroupsKeeper keeper.Keeper
+	UsergroupsKeeper *keeper.Keeper
 	Module           appmodule.AppModule
 }
 
@@ -57,7 +57,7 @@ func ProvideModule(in ModuleInputs) ModuleOutputs {
 		authority,
 		in.BankKeeper,
 	)
-	m := NewAppModule(in.Cdc, k, in.AuthKeeper, in.BankKeeper)
+	m := NewAppModule(in.Cdc, *k, in.AuthKeeper, in.BankKeeper)
 
 	return ModuleOutputs{UsergroupsKeeper: k, Module: m}
 }
