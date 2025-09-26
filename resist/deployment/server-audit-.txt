@@ -1,0 +1,209 @@
+🔍 RESIST BLOCKCHAIN - SERVER AUDIT REPORT
+==========================================
+
+[0;34m📋 SYSTEM OVERVIEW[0m
+----------------------------------------
+Hostname: helios
+OS: Ubuntu 24.04.2 LTS
+Uptime: up 19 hours, 58 minutes
+CPU: 4 cores - Intel(R) N150
+RAM: 31Gi total, 2.0Gi used
+Disk: 98G total, 63G used
+
+[0;34m📋 RUNNING SERVICES[0m
+----------------------------------------
+Active systemd services:
+  docker.service                loaded active running Docker Application Container Engine
+
+[0;34m📋 DOCKER CONTAINERS[0m
+----------------------------------------
+Running containers:
+NAMES                         IMAGE                     PORTS                                         STATUS
+frappe_docker-frontend-1      frappe/erpnext:v15.78.1   0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp   Up 20 hours
+frappe_docker-scheduler-1     frappe/erpnext:v15.78.1                                                 Up 20 hours
+frappe_docker-queue-long-1    frappe/erpnext:v15.78.1                                                 Up 20 hours
+frappe_docker-websocket-1     frappe/erpnext:v15.78.1                                                 Up 20 hours
+frappe_docker-queue-short-1   frappe/erpnext:v15.78.1                                                 Up 20 hours
+frappe_docker-redis-cache-1   redis:6.2-alpine          6379/tcp                                      Up 20 hours
+frappe_docker-redis-queue-1   redis:6.2-alpine          6379/tcp                                      Up 20 hours
+frappe_docker-backend-1       frappe/erpnext:v15.78.1                                                 Up 20 hours
+frappe_docker-db-1            mariadb:10.6              3306/tcp                                      Up 20 hours (healthy)
+lezfindr-backend-db-1         postgis/postgis:16-3.4    0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp   Up 20 hours
+
+All containers (including stopped):
+NAMES                         IMAGE                     STATUS
+aura_verify_backend           aura-verify-backend       Exited (255) 20 hours ago
+aura_verify_postgres          postgres:15               Exited (255) 20 hours ago
+aura_verify_redis             redis:7-alpine            Exited (255) 20 hours ago
+frappe_docker-frontend-1      frappe/erpnext:v15.78.1   Up 20 hours
+frappe_docker-scheduler-1     frappe/erpnext:v15.78.1   Up 20 hours
+frappe_docker-queue-long-1    frappe/erpnext:v15.78.1   Up 20 hours
+frappe_docker-websocket-1     frappe/erpnext:v15.78.1   Up 20 hours
+frappe_docker-queue-short-1   frappe/erpnext:v15.78.1   Up 20 hours
+frappe_docker-redis-cache-1   redis:6.2-alpine          Up 20 hours
+frappe_docker-redis-queue-1   redis:6.2-alpine          Up 20 hours
+frappe_docker-backend-1       frappe/erpnext:v15.78.1   Up 20 hours
+frappe_docker-db-1            mariadb:10.6              Up 20 hours (healthy)
+e2b_api                       e2b/api:latest            Exited (255) 20 hours ago
+e2b_postgres                  postgres:15-alpine        Exited (255) 20 hours ago
+lezfindr-backend-db-1         postgis/postgis:16-3.4    Up 20 hours
+singleton-react-sandbox       react-sandbox:latest      Exited (255) 20 hours ago
+beautiful_bose                react-sandbox:latest      Exited (255) 20 hours ago
+
+[0;34m📋 NETWORK PORTS IN USE[0m
+----------------------------------------
+Listening services:
+
+[0;34m📋 WEB SERVERS[0m
+----------------------------------------
+[1;33m⚠️  Nginx is running[0m
+Nginx config files:
+/etc/nginx/fastcgi.conf
+/etc/nginx/nginx.conf
+/etc/nginx/sites-enabled
+/etc/nginx/sites-available
+/etc/nginx/snippets/snakeoil.conf
+/etc/nginx/snippets/fastcgi-php.conf
+Active sites:
+total 8
+drwxr-xr-x 2 root root 4096 Sep 25 01:09 .
+drwxr-xr-x 8 root root 4096 Sep 25 01:10 ..
+lrwxrwxrwx 1 root root   34 Sep 25 01:09 famchat -> /etc/nginx/sites-available/famchat
+
+[0;34m📋 DATABASES[0m
+----------------------------------------
+
+[0;34m📋 APPLICATION DIRECTORIES[0m
+----------------------------------------
+Common application locations:
+/var/www:
+total 12
+drwxr-xr-x  3 root root 4096 Sep 25 01:08 .
+drwxr-xr-x 14 root root 4096 Sep 25 01:08 ..
+drwxr-xr-x  2 root root 4096 Sep 25 01:08 html
+
+/opt:
+total 20
+drwxr-xr-x  5 root root 4096 Sep 12 06:08 .
+drwxr-xr-x 23 root root 4096 Sep 12 05:58 ..
+drwxr-xr-x  3 root root 4096 Sep 12 06:08 android-sdk
+drwx--x--x  4 root root 4096 Jul 24 20:25 containerd
+
+/srv:
+total 8
+drwxr-xr-x  2 root root 4096 Feb 16  2025 .
+drwxr-xr-x 23 root root 4096 Sep 12 05:58 ..
+
+/usr/local/bin:
+total 246804
+drwxr-xr-x  2 root root      4096 Sep 23 00:00 .
+drwxr-xr-x 10 root root      4096 Sep 18 16:19 ..
+-rwxr-xr-x  1 root root  41192406 Sep 23 00:00 cloudflared
+lrwxrwxrwx  1 root root        52 Aug 16 21:28 gemini -> ../lib/node_modules/@google/gemini-cli/dist/index.js
+
+[0;34m📋 PM2 PROCESSES[0m
+----------------------------------------
+┌────┬─────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 1  │ sandbox-service     │ default     │ 1.0.0   │ fork    │ 2101584  │ 0s     │ 504… │ online    │ 0%       │ 83.5mb   │ josh     │ disabled │
+│ 0  │ scraping-service    │ default     │ 1.0.0   │ fork    │ 1373     │ 19h    │ 0    │ online    │ 0%       │ 75.0mb   │ josh     │ disabled │
+│ 2  │ uc-api              │ default     │ 1.0.0   │ fork    │ 1412     │ 19h    │ 0    │ online    │ 0%       │ 70.4mb   │ josh     │ disabled │
+└────┴─────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+[0;34m📋 NODE.JS PROCESSES[0m
+----------------------------------------
+PID 1373: node /home/josh/local-services/scraping-service/server.js
+PID 1412: node /home/josh/projects/uc-api/index.js
+PID 2201: node /home/frappe/frappe-bench/apps/frappe/socketio.js
+PID 70684: node server.js
+PID 2101584: node /home/josh/local-services/sandbox-service/server.js
+PID 2101616: /usr/bin/python3 /usr/share/apport/apport -p2101584 -s11 -c18446744073709551615 -d1 -P2101584 -u1000 -g1000 -F -- !home!josh!.nvm!versions!node!v22.18.0!bin!node
+
+[0;34m📋 USER ACCOUNTS[0m
+----------------------------------------
+Non-system users:
+nobody (UID: 65534)
+josh (UID: 1000)
+
+[0;34m📋 SCHEDULED TASKS[0m
+----------------------------------------
+System cron jobs:
+/etc/cron.d:
+drwxr-xr-x   2 root root  4096 Sep 25 01:08 .
+drwxr-xr-x 127 root root 12288 Sep 25 01:08 ..
+-rw-r--r--   1 root root   802 Apr 16  2023 certbot
+-rw-r--r--   1 root root   201 Apr  8  2024 e2scrub_all
+-rw-r--r--   1 root root   102 Feb 16  2025 .placeholder
+-rw-r--r--   1 root root   396 Feb 16  2025 sysstat
+
+/etc/cron.daily:
+drwxr-xr-x   2 root root  4096 Sep 25 06:20 .
+drwxr-xr-x 127 root root 12288 Sep 25 01:08 ..
+-rwxr-xr-x   1 root root   376 Oct 26  2024 apport
+-rwxr-xr-x   1 root root  1478 Mar 22  2024 apt-compat
+-rwxr-xr-x   1 root root   123 Feb  5  2024 dpkg
+-rwxr-xr-x   1 root root   377 Feb 16  2025 logrotate
+-rwxr-xr-x   1 root root  1395 Feb 16  2025 man-db
+-rw-r--r--   1 root root   102 Feb 16  2025 .placeholder
+-rwxr-xr-x   1 root root   518 Feb 16  2025 sysstat
+
+/etc/cron.hourly:
+drwxr-xr-x   2 root root  4096 Feb 16  2025 .
+drwxr-xr-x 127 root root 12288 Sep 25 01:08 ..
+-rw-r--r--   1 root root   102 Feb 16  2025 .placeholder
+
+/etc/cron.monthly:
+drwxr-xr-x   2 root root  4096 Feb 16  2025 .
+drwxr-xr-x 127 root root 12288 Sep 25 01:08 ..
+-rw-r--r--   1 root root   102 Feb 16  2025 .placeholder
+
+/etc/cron.weekly:
+drwxr-xr-x   2 root root  4096 Feb 16  2025 .
+drwxr-xr-x 127 root root 12288 Sep 25 01:08 ..
+-rwxr-xr-x   1 root root  1055 Feb 16  2025 man-db
+-rw-r--r--   1 root root   102 Feb 16  2025 .placeholder
+
+/etc/cron.yearly:
+drwxr-xr-x   2 root root  4096 Feb 16  2025 .
+drwxr-xr-x 127 root root 12288 Sep 25 01:08 ..
+-rw-r--r--   1 root root   102 Feb 16  2025 .placeholder
+
+User cron jobs:
+*/5 * * * * /home/josh/projects/duckdns/duckdns.sh > /dev/null 2>&1
+User josh has cron jobs
+
+[0;34m📋 SSL CERTIFICATES[0m
+----------------------------------------
+SSL certificates in /etc/ssl/certs:
+-rw-r--r-- 1 root root 219342 Feb 16  2025 /etc/ssl/certs/ca-certificates.crt
+
+[0;34m📋 IMPORTANT CONFIG FILES[0m
+----------------------------------------
+Found: /etc/nginx/nginx.conf
+
+[0;34m📋 🎯 RECOMMENDATIONS FOR RESIST DEPLOYMENT[0m
+----------------------------------------
+
+[0;32m✅ SAFE APPROACH:[0m
+1. Create a backup of your entire server before making changes
+2. Document your family chat app and CRM configurations
+3. Use Docker containers for Resist blockchain (isolated from existing apps)
+4. Use different ports for Resist services to avoid conflicts
+5. Test Resist deployment in a separate user directory first
+
+[1;33m⚠️  PORTS TO CHECK:[0m
+Family Chat App - Check what ports it uses
+Business CRM - Document its port usage
+Resist needs: 26656 (P2P), 26657 (RPC), 1317 (API), 3000 (Mobile API)
+
+[1;33m⚠️  NEXT STEPS:[0m
+1. Run this audit and save the output
+2. Identify your family chat app and CRM locations
+3. Create a backup strategy
+4. Plan port allocation to avoid conflicts
+5. Use Docker for clean separation
+
+📊 AUDIT COMPLETE
+Review this output carefully before proceeding with Resist deployment.
+Save this report: ./server-audit.sh > server-audit-20250925.txt

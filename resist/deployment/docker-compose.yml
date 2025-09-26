@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  # IPFS for decentralized storage
+  ipfs:
+    image: ipfs/go-ipfs:latest
+    container_name: resist-ipfs
+    restart: unless-stopped
+    ports:
+      - "4001:4001"    # IPFS Swarm
+      - "5001:5001"    # IPFS API
+    volumes:
+      - ipfs-data:/data/ipfs
+    environment:
+      - IPFS_PATH=/data/ipfs
+    networks:
+      - resist-network
+
+  # PostgreSQL for mobile API backend
+  postgres:
+    image: postgres:15-alpine
+    container_name: resist-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=resist_mobile
+      - POSTGRES_USER=resist_user
+      - POSTGRES_PASSWORD=secure_resist_password_2024
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - resist-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U resist_user -d resist_mobile"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Resist Blockchain Node (Mock Service)
+  resist-node:
+    build:
+      context: /opt/resist-blockchain
+      dockerfile: Dockerfile
+    container_name: resist-blockchain-node
+    restart: unless-stopped
+    ports:
+      - "26656:26656"  # P2P
+      - "26657:26657"  # RPC
+      - "1317:1317"    # API
+    volumes:
+      - blockchain-data:/home/resist/.resist
+    environment:
+      - CHAIN_ID=resist-mainnet-1
+      - MONIKER=resist-production-node
+    networks:
+      - resist-network
+    depends_on:
+      - ipfs
+
+  # Mobile API Server
+  mobile-api:
+    image: node:18-alpine
+    container_name: resist-mobile-api
+    restart: unless-stopped
+    ports:
+      - "3003:3003"    # Mobile API (avoiding existing 3000-3002)
+    working_dir: /app
+    volumes:
+      - /home/josh/projects/resist-blockchain/resist/mobile-app:/app:ro
+    environment:
+      - NODE_ENV=production
+      - PORT=3003
+      - DATABASE_URL=postgresql://resist_user:secure_resist_password_2024@postgres:5432/resist_mobile
+      - BLOCKCHAIN_RPC_URL=http://resist-node:26657
+      - BLOCKCHAIN_API_URL=http://resist-node:1317
+      - IPFS_API_URL=http://ipfs:5001
+    networks:
+      - resist-network
+    depends_on:
+      - postgres
+      - resist-node
+    command: sh -c "npm install && npm start"
+
+volumes:
+  blockchain-data:
+    driver: local
+  ipfs-data:
+    driver: local
+  postgres-data:
+    driver: local
+
+networks:
+  resist-network:
+    driver: bridge
+    name: resist-network

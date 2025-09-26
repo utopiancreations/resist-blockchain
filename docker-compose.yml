@@ -1,0 +1,30 @@
+version: '3.8'
+
+  services:
+    resist-node:
+      image: cosmoscontracts/juno:latest  # We'll use this as a base for now
+      container_name: resist-node
+      restart: unless-stopped
+      ports:
+        - "26656:26656"  # P2P (blockchain specific)
+        - "26657:26657"  # RPC (blockchain specific)
+        - "1317:1317"    # API (blockchain specific)
+      volumes:
+        - blockchain-data:/root/.resist
+      environment:
+        - CHAIN_ID=resist-mainnet-1
+        - MONIKER=resist-main-node
+      command: |
+        sh -c "
+          echo 'Resist node placeholder - need to build actual image'
+          sleep 3600
+        "
+
+  volumes:
+    blockchain-data:
+      driver: local
+
+  networks:
+    default:
+      name: resist-network
+      driver: bridge
