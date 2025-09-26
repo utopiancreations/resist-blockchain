@@ -1,0 +1,194 @@
+version: '3.8'
+
+# Resist Blockchain Community Node
+# Easy one-click deployment for community node operators
+#
+# Usage:
+# 1. Clone this repository
+# 2. Set your node configuration in .env file
+# 3. Run: docker-compose up -d
+# 4. Your node will automatically connect to the Resist network!
+
+services:
+  # Main Resist blockchain node (based on production deployment)
+  resist-node:
+    build:
+      context: .
+      dockerfile: Dockerfile.resist-node
+    container_name: resist-community-node
+    restart: unless-stopped
+    ports:
+      - "${NODE_P2P_PORT:-26656}:26656"      # P2P port for peer connections
+      - "${NODE_RPC_PORT:-26657}:26657"      # RPC port for API access
+      - "${NODE_API_PORT:-1317}:1317"        # REST API port
+    volumes:
+      - blockchain-data:/home/resist/.resist
+      - ./config:/home/resist/.resist/config
+      - ./genesis.json:/home/resist/.resist/config/genesis.json
+    environment:
+      - CHAIN_ID=${CHAIN_ID:-resist-mainnet-1}
+      - MONIKER=${NODE_MONIKER:-community-node}
+      - SEEDS=${SEED_NODES:-}
+      - PERSISTENT_PEERS=${PERSISTENT_PEERS:-}
+      - EXTERNAL_ADDRESS=${EXTERNAL_ADDRESS:-}
+      - VALIDATOR_MODE=${VALIDATOR_MODE:-false}
+      - COMMUNITY_NODE=${NODE_OPERATOR:-true}
+    mem_limit: ${NODE_MEMORY_LIMIT:-4g}
+    cpus: ${NODE_CPU_LIMIT:-2}
+    networks:
+      - resist-community-network
+    depends_on:
+      - ipfs-node
+    labels:
+      - "resist.service=blockchain-node"
+      - "resist.network=community"
+
+  # IPFS node for content distribution
+  ipfs-node:
+    image: ipfs/kubo:latest
+    container_name: resist-ipfs
+    restart: unless-stopped
+    ports:
+      - "${IPFS_SWARM_PORT:-4001}:4001"      # IPFS swarm port
+      - "${IPFS_API_PORT:-5001}:5001"        # IPFS API port
+      - "${IPFS_GATEWAY_PORT:-8080}:8080"    # IPFS gateway port
+    volumes:
+      - ipfs-data:/data/ipfs
+    environment:
+      - IPFS_PROFILE=server
+      - IPFS_PATH=/data/ipfs
+      - LIBP2P_FORCE_PNET=0
+    mem_limit: ${IPFS_MEMORY_LIMIT:-2g}
+    command: |
+      sh -c "
+        # Initialize IPFS if not already done
+        if [ ! -f /data/ipfs/config ]; then
+          ipfs init --profile=server
+
+          # Configure IPFS for blockchain integration
+          ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '[\"*\"]'
+          ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '[\"GET\", \"POST\", \"PUT\", \"DELETE\"]'
+          ipfs config --json API.HTTPHeaders.Access-Control-Allow-Headers '[\"Authorization\", \"Content-Type\"]'
+
+          # Connect to Resist IPFS network
+          ipfs bootstrap add /ip4/${RESIST_HUB_IP:-your-hub-ip}/tcp/4001/p2p/${RESIST_HUB_PEER_ID:-hub-peer-id}
+        fi
+
+        # Start IPFS daemon
+        ipfs daemon --migrate=true --agent-version-suffix=resist-community-node
+      "
+    labels:
+      - "resist.service=ipfs-node"
+      - "resist.network=community"
+
+  # Optional: Community API gateway
+  api-gateway:
+    build: ./api-gateway
+    container_name: resist-api-gateway
+    restart: unless-stopped
+    ports:
+      - "${API_GATEWAY_PORT:-3000}:3000"
+    volumes:
+      - ./api-gateway:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=production
+      - BLOCKCHAIN_RPC=http://resist-node:26657
+      - BLOCKCHAIN_API=http://resist-node:1317
+      - IPFS_API=http://ipfs-node:5001
+      - COMMUNITY_NODE=true
+      - NODE_OPERATOR=${NODE_OPERATOR:-anonymous}
+    mem_limit: ${API_MEMORY_LIMIT:-1g}
+    depends_on:
+      resist-node:
+        condition: service_healthy
+      ipfs-node:
+        condition: service_started
+    labels:
+      - "resist.service=api-gateway"
+      - "resist.network=community"
+
+  # Node monitoring and stats
+  node-monitor:
+    image: prom/prometheus:latest
+    container_name: resist-monitor
+    restart: unless-stopped
+    ports:
+      - "${MONITOR_PORT:-9090}:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.enable-lifecycle'
+    mem_limit: ${MONITOR_MEMORY_LIMIT:-512m}
+    labels:
+      - "resist.service=monitoring"
+      - "resist.network=community"
+
+  # Automatic backup service
+  backup-service:
+    image: alpine:latest
+    container_name: resist-backup
+    restart: "no"
+    profiles: ["backup"]  # Only runs when explicitly called
+    volumes:
+      - blockchain-data:/backup/blockchain:ro
+      - ipfs-data:/backup/ipfs:ro
+      - ./backups:/backups
+    environment:
+      - NODE_OPERATOR=${NODE_OPERATOR:-anonymous}
+      - BACKUP_RETENTION_DAYS=${BACKUP_RETENTION_DAYS:-7}
+    command: |
+      sh -c "
+        apk add --no-cache tar gzip curl &&
+
+        # Create timestamped backup
+        BACKUP_NAME=resist-node-backup-$(date +%Y%m%d-%H%M%S) &&
+
+        # Backup blockchain data
+        tar -czf /backups/$BACKUP_NAME-blockchain.tar.gz -C /backup blockchain &&
+
+        # Backup IPFS data (selective - config only)
+        tar -czf /backups/$BACKUP_NAME-ipfs-config.tar.gz -C /backup/ipfs config &&
+
+        # Clean old backups
+        find /backups -name '*.tar.gz' -mtime +$BACKUP_RETENTION_DAYS -delete &&
+
+        # Report backup status to network (optional)
+        if [ ! -z \"$RESIST_BACKUP_ENDPOINT\" ]; then
+          curl -X POST \"$RESIST_BACKUP_ENDPOINT\" \
+            -H 'Content-Type: application/json' \
+            -d '{\"node_operator\":\"'$NODE_OPERATOR'\",\"backup_time\":\"'$(date -Iseconds)'\",\"status\":\"success\"}'
+        fi &&
+
+        echo 'Backup completed successfully!'
+      "
+    labels:
+      - "resist.service=backup"
+      - "resist.network=community"
+
+volumes:
+  blockchain-data:
+    driver: local
+    labels:
+      - "resist.data=blockchain"
+  ipfs-data:
+    driver: local
+    labels:
+      - "resist.data=ipfs"
+  prometheus-data:
+    driver: local
+    labels:
+      - "resist.data=monitoring"
+
+networks:
+  default:
+    name: resist-community-network
+    driver: bridge
+    labels:
+      - "resist.network=community"

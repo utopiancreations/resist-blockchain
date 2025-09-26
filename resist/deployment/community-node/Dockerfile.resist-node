@@ -1,0 +1,201 @@
+# Resist Blockchain Community Node Dockerfile
+# Based on the production deployment from Linux server
+FROM alpine:latest
+
+# Install required packages
+RUN apk --no-cache add ca-certificates bash curl jq git make
+
+# Create resist user (matching production deployment)
+RUN addgroup -g 1000 resist && \
+    adduser -D -s /bin/bash -u 1000 -G resist resist
+
+WORKDIR /home/resist
+
+# Create directory structure
+RUN mkdir -p /home/resist/.resist/config && \
+    mkdir -p /home/resist/.resist/data && \
+    chown -R resist:resist /home/resist/.resist
+
+# Copy genesis file and configuration templates
+COPY genesis.json /home/resist/.resist/config/genesis.json
+COPY config-templates/ /home/resist/.resist/config-templates/
+
+# Create the community node startup script
+RUN cat > start-community-node.sh << 'EOF'
+#!/bin/bash
+
+echo "🚀 Starting Resist Community Node..."
+echo "Node Operator: ${NODE_OPERATOR:-Anonymous}"
+echo "Moniker: ${MONIKER:-community-node}"
+echo "Chain ID: ${CHAIN_ID:-resist-mainnet-1}"
+echo "Community Mode: ${COMMUNITY_NODE:-true}"
+
+# Ensure proper ownership
+chown -R resist:resist /home/resist/.resist
+
+# Initialize configuration if not exists
+if [ ! -f /home/resist/.resist/config/config.toml ]; then
+    echo "Initializing node configuration..."
+
+    # Create basic config files from templates
+    if [ -d /home/resist/.resist/config-templates ]; then
+        cp /home/resist/.resist/config-templates/* /home/resist/.resist/config/
+    fi
+
+    # Update moniker in config
+    if [ -f /home/resist/.resist/config/config.toml ]; then
+        sed -i "s/moniker = \"\"/moniker = \"${MONIKER:-community-node}\"/g" /home/resist/.resist/config/config.toml
+    fi
+fi
+
+# Configure seeds and peers if provided
+if [ ! -z "$SEEDS" ]; then
+    echo "Configuring seed nodes: $SEEDS"
+    sed -i "s/seeds = \"\"/seeds = \"$SEEDS\"/g" /home/resist/.resist/config/config.toml
+fi
+
+if [ ! -z "$PERSISTENT_PEERS" ]; then
+    echo "Configuring persistent peers: $PERSISTENT_PEERS"
+    sed -i "s/persistent_peers = \"\"/persistent_peers = \"$PERSISTENT_PEERS\"/g" /home/resist/.resist/config/config.toml
+fi
+
+# Configure external address if provided
+if [ ! -z "$EXTERNAL_ADDRESS" ]; then
+    echo "Configuring external address: $EXTERNAL_ADDRESS"
+    sed -i "s/external_address = \"\"/external_address = \"$EXTERNAL_ADDRESS\"/g" /home/resist/.resist/config/config.toml
+fi
+
+# Community node specific configuration
+echo "Configuring community node settings..."
+
+# Enable API and RPC endpoints
+if [ -f /home/resist/.resist/config/app.toml ]; then
+    sed -i 's/enable = false/enable = true/g' /home/resist/.resist/config/app.toml
+    sed -i 's/swagger = false/swagger = true/g' /home/resist/.resist/config/app.toml
+fi
+
+# For now, this runs a mock service until the actual resistd binary is ready
+echo "Starting Mock Resist Community Node Service..."
+echo "This is a development placeholder - will be replaced with actual resistd binary"
+
+# Create mock health endpoints
+mkdir -p /tmp/mock-api
+
+# Mock health endpoint (for docker healthchecks)
+while true; do
+    echo "HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 40
+
+{\"status\":\"healthy\",\"node\":\"mock\"}" | nc -l -p 26657 -q 1 &
+
+    echo "$(date): Community Node Status - Operator: ${NODE_OPERATOR:-Anonymous}, Moniker: ${MONIKER:-community-node}"
+    echo "$(date): Blockchain: P2P(26656), RPC(26657), API(1317)"
+    echo "$(date): Ready for community connections and mobile apps"
+
+    sleep 30
+done
+EOF
+
+RUN chmod +x start-community-node.sh && chown resist:resist start-community-node.sh
+
+# Create config templates directory
+RUN mkdir -p /home/resist/.resist/config-templates
+
+# Create basic config template (simplified version for community nodes)
+RUN cat > /home/resist/.resist/config-templates/config.toml << 'EOF'
+# Resist Community Node Configuration Template
+
+# Node identity
+moniker = ""
+node_key = "node_key.json"
+priv_validator_key = "priv_validator_key.json"
+priv_validator_state = "priv_validator_state.json"
+
+# Network settings
+seeds = ""
+persistent_peers = ""
+external_address = ""
+
+# RPC server settings
+[rpc]
+laddr = "tcp://0.0.0.0:26657"
+cors_allowed_origins = ["*"]
+max_open_connections = 900
+
+# P2P settings
+[p2p]
+laddr = "tcp://0.0.0.0:26656"
+external_address = ""
+seeds = ""
+persistent_peers = ""
+max_num_inbound_peers = 40
+max_num_outbound_peers = 10
+
+# Consensus settings optimized for community nodes
+[consensus]
+timeout_propose = "3s"
+timeout_prevote = "1s"
+timeout_precommit = "1s"
+timeout_commit = "5s"
+create_empty_blocks = true
+create_empty_blocks_interval = "30s"
+
+# Mempool settings
+[mempool]
+recheck = true
+broadcast = true
+size = 5000
+cache_size = 10000
+EOF
+
+# Create app config template
+RUN cat > /home/resist/.resist/config-templates/app.toml << 'EOF'
+# Resist Community Node App Configuration Template
+
+# API settings
+[api]
+enable = true
+swagger = true
+address = "tcp://0.0.0.0:1317"
+max-open-connections = 1000
+
+# gRPC settings
+[grpc]
+enable = true
+address = "0.0.0.0:9090"
+
+# State sync (for faster community node sync)
+[state-sync]
+snapshot-interval = 1000
+snapshot-keep-recent = 10
+
+# Pruning (optimized for community nodes)
+pruning = "default"
+pruning-keep-recent = "100"
+pruning-interval = "10"
+
+# Minimum gas prices
+minimum-gas-prices = "0.025stake"
+
+# Telemetry for network health monitoring
+[telemetry]
+enabled = true
+service-name = "resist-community-node"
+EOF
+
+# Expose standard blockchain ports
+EXPOSE 26656 26657 1317
+
+# Switch to resist user for security
+USER resist
+
+# Set working directory
+WORKDIR /home/resist
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:26657/ || exit 1
+
+# Start the community node
+CMD ["./start-community-node.sh"]
